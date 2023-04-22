@@ -1,0 +1,50 @@
+{
+	"name": "serpent",
+	"description": "serpent",
+	"version": "0.1.0",
+	"license": "MIT",
+	"author": {
+		"name": "studio-pc"
+	},
+	"repository": {
+		"url": "https://github.com/studio-pc/serpent.git"
+	},
+	"main": "dist/main.js",
+	"scripts": {
+		"dev": "rimraf dist && run-p dev:webpack dev:electron",
+		"build": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --progress",
+		"dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
+		"dev:electron": "wait-on dist/main.js dist/index.html && electronmon ."
+	},
+	"electronmon": {
+		"patterns": [
+			"dist/**/*"
+		]
+	},
+	"dependencies": {
+		"@stitches/react": "^1.2.8",
+		"interprocess": "^0.2.5",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"zustand": "^4.3.7"
+	},
+	"devDependencies": {
+		"@types/node": "^18.15.13",
+		"@types/react": "^18.0.38",
+		"@types/react-dom": "^18.0.11",
+		"cross-env": "^7.0.3",
+		"css-loader": "^6.7.3",
+		"electron": "^24.1.2",
+		"electronmon": "^2.0.2",
+		"html-webpack-plugin": "^5.5.1",
+		"mini-css-extract-plugin": "^2.7.5",
+		"npm-run-all": "^4.1.5",
+		"rimraf": "^5.0.0",
+		"ts-loader": "^9.4.2",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.0.4",
+		"wait-on": "^7.0.1",
+		"webpack": "^5.80.0",
+		"webpack-cli": "^5.0.2"
+	}
+}
