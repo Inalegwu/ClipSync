@@ -4,50 +4,57 @@ import { useColorModeValue } from "../state";
 
 export interface SwitchProps {
   size?: number;
+  onClick?: () => void;
 }
 
 export interface SwitchRef {
-  clicked: () => boolean;
+  active: () => boolean;
+  setActive: (state: boolean) => void;
 }
 
-const Switch = React.forwardRef<SwitchRef, SwitchProps>(({ size }, ref) => {
-  const { colorMode } = useColorModeValue();
-  const [isActive, setIsActive] = React.useState<boolean>(false);
+const Switch = React.forwardRef<SwitchRef, SwitchProps>(
+  ({ size, onClick }, ref) => {
+    const { colorMode } = useColorModeValue();
+    const [isActive, setIsActive] = React.useState<boolean>(false);
 
-  const clicked = React.useCallback(() => {
-    return isActive;
-  }, []);
+    const active = React.useCallback(() => {
+      return isActive;
+    }, [isActive]);
 
-  React.useImperativeHandle(ref, () => ({ clicked }));
+    const setActive = React.useCallback((state: boolean) => {
+      console.log("New State : ", state);
+      setIsActive(state);
+    }, []);
 
-  return (
-    <Box
-      css={{
-        height: "25px",
-        width: "45px",
-        padding: "$1",
-        borderRadius: "9999px",
-        display: "inline-block",
-        background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
-      }}
-    >
+    React.useImperativeHandle(ref, () => ({ active, setActive }));
+
+    return (
       <Box
-        onClick={() => {
-          setIsActive(!isActive);
-        }}
+        onClick={onClick}
         css={{
-          position: "relative",
-          left: ` ${isActive === true ? "50%" : "0"}`,
-          cursor: "pointer",
-          width: "45%",
-          height: "100%",
-          borderRadius: "100px",
-          background: "$primary",
-          transition: "0.4 ease-in-out",
+          height: "25px",
+          width: "45px",
+          padding: "$1",
+          borderRadius: "9999px",
+          display: "inline-block",
+          background: `${colorMode === "Dark" ? "black" : "$whiteMuted"}`,
         }}
-      ></Box>
-    </Box>
-  );
-});
+      >
+        <Box
+          css={{
+            position: "relative",
+            left: ` ${isActive === true ? "50%" : "0"}`,
+            cursor: "pointer",
+            width: "45%",
+            height: "100%",
+            borderRadius: "100px",
+            background: "$primary",
+            transition: "0.4 ease-in-out",
+          }}
+        ></Box>
+      </Box>
+    );
+  }
+);
 
 export default Switch;

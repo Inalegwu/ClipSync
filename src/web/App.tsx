@@ -9,14 +9,21 @@ import "./index.css";
 
 export const App = () => {
   const { invoke } = useWindowApi();
-  const { colorMode } = useColorModeValue();
+  const { colorMode, setColorMode } = useColorModeValue();
   const [clipBoardData, setClipBoardData] = React.useState<Array<string>>([]);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useMemo(() => {
     invoke.readClipBoard().then((res) => {
       setClipBoardData([res]);
     });
   }, [clipBoardData]);
+
+  React.useEffect(() => {
+    invoke.readSettings().then((settings) => {
+      setColorMode(settings.colorMode);
+    });
+  }, []);
 
   function addToClipBoard(text: string) {
     invoke.appendToClipBoard(text);
@@ -69,10 +76,12 @@ export const App = () => {
         })}
       </Box>
       <Input
+        ref={inputRef}
         type="Text"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             addToClipBoard(e.currentTarget.value);
+            e.currentTarget.value = "";
           }
         }}
         placeholder="Add To Clipboard"

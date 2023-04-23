@@ -3,28 +3,30 @@ import { SettingsData } from "../../utils/types";
 import path from "path";
 import { app } from "electron";
 import * as fs from "fs";
+import superjson from "superjson";
 
 export const ConfigIpcs = createIpcSlice({
   main: {
     async saveSettings(_, settings: SettingsData) {
-      const settingsPath = path.join(
-        app.getPath("appData"),
-        "/clipSync/settings.json"
-      );
-      const stringifiedSettings = JSON.stringify(settings);
+      const stringifiedSettings = superjson.stringify(settings);
       console.log(stringifiedSettings);
 
-      await fs.writeFileSync(settingsPath, stringifiedSettings, {
-        encoding: "utf-8",
-      });
+      fs.writeFile(
+        path.join(app.getPath("appData"), "serpent/settings.json"),
+        stringifiedSettings,
+        "utf-8",
+        (err) => {
+          if (err) throw err;
+        }
+      );
       return true;
     },
     async readSettings() {
       const settingsPath = path.join(
         app.getPath("appData"),
-        "/clipSync/settings.json"
+        "serpent/settings.json"
       );
-      const settingsData: SettingsData = JSON.parse(
+      const settingsData: SettingsData = superjson.parse(
         fs.readFileSync(settingsPath, { encoding: "utf-8" })
       );
 

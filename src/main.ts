@@ -30,7 +30,7 @@ app.whenReady().then(() => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
   });
 
-  mainWindow.webContents.openDevTools({ mode: "detach" });
+  // mainWindow.webContents.openDevTools({ mode: "detach" });
 
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.show();
