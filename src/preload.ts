@@ -1,4 +1,4 @@
-import { exposeApiToGlobalWindow } from "./shared/ipcs";
+import { exposeApiToGlobalWindow } from "./shared/ipcs/ipcs";
 
 console.log("Fuck Yeah I'm Mounted Up");
 

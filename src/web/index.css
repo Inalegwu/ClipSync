@@ -1,14 +1,12 @@
 * {
   margin: 0;
   padding: 0;
-  text-decoration: none;
-  list-style: none;
+  box-sizing: border-box;
 }
-
 body {
+  background: transparent;
   overflow: hidden;
 }
-
 ::-webkit-scrollbar {
   width: 0;
   background: transparent;

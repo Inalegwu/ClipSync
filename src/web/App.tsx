@@ -1,9 +1,11 @@
 import React from "react";
-import "./App.css";
-import { Box } from "./component/styled";
 import useWindowApi from "./hooks/useWindowApi";
 import { useColorModeValue } from "./state";
-import ClipBoardItem from "./component/ClipBoardItem";
+import { Box, Input, LinkButton } from "./component/styled";
+import { FiSettings } from "react-icons/fi";
+import { Toaster } from "react-hot-toast";
+import ClipItem from "./component/ClipItem";
+import "./index.css";
 
 export const App = () => {
   const { invoke } = useWindowApi();
@@ -16,24 +18,71 @@ export const App = () => {
     });
   }, [clipBoardData]);
 
+  function addToClipBoard(text: string) {
+    invoke.appendToClipBoard(text);
+  }
+
   return (
     <Box
       css={{
         width: "100%",
         height: "100vh",
-        background: `${
-          colorMode === "Light" ? "$background" : "$backgroundDark"
-        }`,
-        color: `${colorMode == "Light" ? "$backgroundDark" : "$background"}`,
+        overflow: "hidden",
         padding: "$2",
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "scroll",
+        background: `${
+          colorMode === "Dark" ? "$backgroundDark" : "$background"
+        }`,
+        color: `${colorMode === "Dark" ? "$background" : "$backgroundDark"}`,
       }}
     >
-      {clipBoardData.map((data, index) => {
-        return <ClipBoardItem item={data} key={index} />;
-      })}
+      <Box
+        css={{
+          width: "100%",
+          height: "10%",
+          display: "flex",
+          alignContent: "center",
+          gap: "10px",
+          justifyContent: "flex-end",
+        }}
+      >
+        <LinkButton
+          to="/settings"
+          css={{
+            width: "30px",
+            height: "30px",
+          }}
+          variant={colorMode === "Dark" ? "dark" : "light"}
+        >
+          <FiSettings size={14} />
+        </LinkButton>
+      </Box>
+      <Box
+        css={{
+          height: "80%",
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "scroll",
+        }}
+      >
+        {clipBoardData?.map((data, idx) => {
+          return <ClipItem data={data} key={idx} />;
+        })}
+      </Box>
+      <Input
+        type="Text"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            addToClipBoard(e.currentTarget.value);
+          }
+        }}
+        placeholder="Add To Clipboard"
+        css={{
+          height: "10%",
+          width: "100%",
+        }}
+        variant={colorMode === "Dark" ? "dark" : "light"}
+      />
+      <Toaster position="bottom-center" reverseOrder={true} />
     </Box>
   );
 };

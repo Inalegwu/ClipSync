@@ -8,6 +8,6 @@ export interface ColorModeState {
 }
 
 export const useColorModeValue = create<ColorModeState>((set) => ({
-  colorMode: "Dark",
+  colorMode: "Light",
   setColorMode: (mode) => set(() => ({ colorMode: mode })),
 }));

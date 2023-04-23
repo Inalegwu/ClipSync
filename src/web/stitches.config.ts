@@ -1,23 +1,23 @@
 import { createStitches } from "@stitches/react";
-
 export const { styled } = createStitches({
   theme: {
     colors: {
-      background: "#cccccc",
+      background: "#f1f1f1",
       backgroundDark: "#000000",
-      backgroundMuted: "#ececec69",
-      backgroundDarkMuted: "#00000088",
-      primary: "#3a52a1",
+      whiteMuted: "#e0e0e09d",
+      blackMuted: "#161515b7",
+      primary: "#322796",
+      danger: "#d82828",
+      success: "#29cc6d",
     },
     space: {
-      1: "5px",
-      2: "10px",
-      3: "12px",
-      4: "15px",
-      5: "18px",
+      1: "4px",
+      2: "8px",
+      3: "10px",
+      4: "12px",
+      5: "16px",
       6: "20px",
       7: "24px",
-      8: "28px",
     },
   },
 });

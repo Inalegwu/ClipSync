@@ -9,7 +9,7 @@
     "jsx": "react-jsx",
     "strict": true
   },
-  "include": ["src"],
+  "include": ["src", "tailwind.config.js"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
