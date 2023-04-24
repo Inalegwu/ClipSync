@@ -6,7 +6,6 @@ export const LinkButton = styled(Link, {
   padding: "$2",
   appearance: "none",
   border: "none",
-  outlineColor: "$primary",
   display: "flex",
   alignContent: "center",
   alignItems: "center",

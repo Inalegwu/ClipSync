@@ -1,23 +1,18 @@
 import React from "react";
 import useWindowApi from "./hooks/useWindowApi";
-import { useClipBoard, useColorModeValue } from "./state";
+import { useColorModeValue, usePrimaryColor } from "./state";
 import { Box, Input, LinkButton } from "./component/styled";
 import { FiSettings, FiInfo } from "react-icons/fi";
 import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
-import { ClipType } from "../shared/utils/types";
-import ClipImage from "./component/ClipImage";
-import db from "../shared/utils/db";
-import superjson from "superjson";
-import * as UUId from "uuid";
 
 export const App = () => {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
+  const { primaryColor, setPrimaryColor } = usePrimaryColor();
   const { changeSyncState, changeSyncFrequency } = useSyncState();
-  const { clipBoardState, updateClipBoardState } = useClipBoard();
   const [clipBoardData, setClipBoardData] = React.useState<Array<string>>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -32,6 +27,7 @@ export const App = () => {
       setColorMode(settings.colorMode);
       changeSyncState(settings.syncState);
       changeSyncFrequency(settings.syncFrequency);
+      setPrimaryColor(settings.color);
     });
   }, []);
 
@@ -68,9 +64,10 @@ export const App = () => {
             width: "30px",
             height: "30px",
             "&:hover": {
-              background: "$primary",
+              background: `${primaryColor}`,
               color: "white",
             },
+            outlineColor: `${primaryColor}`,
           }}
           variant={colorMode === "Dark" ? "dark" : "light"}
         >
@@ -81,6 +78,10 @@ export const App = () => {
           css={{
             width: "30px",
             height: "30px",
+            outlineColor: `${primaryColor}`,
+            "&:hover": {
+              color: `${primaryColor}`,
+            },
           }}
           variant={colorMode === "Dark" ? "dark" : "light"}
         >
@@ -113,6 +114,7 @@ export const App = () => {
           height: "10%",
           width: "100%",
           border: "0.1px solid #3838383c",
+          outlineColor: `${primaryColor}`,
         }}
         variant={colorMode === "Dark" ? "dark" : "light"}
       />
@@ -128,6 +130,7 @@ export const App = () => {
             background: `${colorMode === "Dark" ? "black" : "white"}`,
             color: `${colorMode === "Dark" ? "white" : "black"}`,
             fontFamily: "Nunito",
+            outlineColor: `${primaryColor}`,
           },
         }}
       />

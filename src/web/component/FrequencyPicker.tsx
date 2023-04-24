@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Paragraph, Select } from "./styled";
-import { useColorModeValue } from "../state";
+import { useColorModeValue, usePrimaryColor } from "../state";
 import { SyncFrequency } from "../state/syncState";
 
 export interface FrequencyPickerProps {
@@ -23,6 +23,7 @@ const FrequencyPicker = React.forwardRef<
   FrequencyPickerRef,
   FrequencyPickerProps
 >(({ onChange }, ref) => {
+  const { primaryColor } = usePrimaryColor();
   const { colorMode } = useColorModeValue();
   const [frequencyOption, setFrequencyOption] =
     React.useState<SyncFrequency>("DAILY");
@@ -49,6 +50,7 @@ const FrequencyPicker = React.forwardRef<
         padding: "$1",
         fontSize: "11px",
         color: `${colorMode === "Dark" ? "white" : "black"}`,
+        outlineColor: `${primaryColor}`,
       }}
     >
       {syncOptions.map((option, idx) => {

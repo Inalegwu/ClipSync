@@ -5,7 +5,6 @@ export const Button = styled("button", {
   padding: "$2",
   appearance: "none",
   border: "none",
-  outlineColor: "$primary",
   display: "flex",
   alignContent: "center",
   alignItems: "center",

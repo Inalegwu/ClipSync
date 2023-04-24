@@ -7,7 +7,7 @@ import {
   Paragraph,
   Title,
 } from "../component/styled";
-import { useColorModeValue } from "../state";
+import { useColorModeValue, usePrimaryColor, useSyncState } from "../state";
 import { FiHome } from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
@@ -17,10 +17,10 @@ import { Toaster, toast } from "react-hot-toast";
 import FrequencyPicker, {
   FrequencyPickerRef,
 } from "../component/FrequencyPicker";
-import { useSyncState } from "../state/syncState";
 
 function Settings() {
   const { colorMode, setColorMode } = useColorModeValue();
+  const { primaryColor, setPrimaryColor } = usePrimaryColor();
   const { syncState, changeSyncFrequency, changeSyncState, syncFrequency } =
     useSyncState();
   const { invoke } = useWindowApi();
@@ -89,6 +89,7 @@ function Settings() {
       colorMode,
       syncFrequency: frequencyRef.current?.option()!,
       syncState: syncSwitchRef.current?.active()!,
+      color: primaryColor,
     };
     invoke
       .saveSettings(settingsData)
@@ -122,7 +123,16 @@ function Settings() {
           alignItems: "center",
         }}
       >
-        <LinkButton to="/" variant={colorMode === "Dark" ? "dark" : "light"}>
+        <LinkButton
+          css={{
+            outlineColor: `${primaryColor}`,
+            "&:hover": {
+              color: `${primaryColor}`,
+            },
+          }}
+          to="/"
+          variant={colorMode === "Dark" ? "dark" : "light"}
+        >
           <FiHome size={13} />
         </LinkButton>
       </Box>
@@ -168,8 +178,15 @@ function Settings() {
               Color
             </Paragraph>
             <Input
+              onChange={(e) => {
+                setPrimaryColor(e.currentTarget.value);
+              }}
+              defaultValue={primaryColor}
               css={{
-                background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+                background: `${
+                  colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
+                }`,
+                outlineColor: `${primaryColor}`,
               }}
               type="color"
             />
@@ -189,9 +206,10 @@ function Settings() {
         <Button
           onClick={saveSettings}
           css={{
-            background: "$primary",
+            background: `${primaryColor}`,
             marginTop: "$2",
             cursor: "pointer",
+            outlineColor: `${primaryColor}`,
           }}
         >
           <Paragraph css={{ color: "white" }}>Save Settings</Paragraph>

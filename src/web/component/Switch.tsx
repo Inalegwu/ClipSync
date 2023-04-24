@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "./styled";
-import { useColorModeValue } from "../state";
+import { useColorModeValue, usePrimaryColor } from "../state";
 
 export interface SwitchProps {
   size?: number;
@@ -14,6 +14,7 @@ export interface SwitchRef {
 
 const Switch = React.forwardRef<SwitchRef, SwitchProps>(
   ({ size, onClick }, ref) => {
+    const { primaryColor } = usePrimaryColor();
     const { colorMode } = useColorModeValue();
     const [isActive, setIsActive] = React.useState<boolean>(false);
 
@@ -37,7 +38,7 @@ const Switch = React.forwardRef<SwitchRef, SwitchProps>(
           borderRadius: "9999px",
           display: "inline-block",
           background: `${colorMode === "Dark" ? "black" : "$whiteMuted"}`,
-          outlineColor: "$primary",
+          outlineColor: `${primaryColor}`,
         }}
       >
         <Box
@@ -48,7 +49,7 @@ const Switch = React.forwardRef<SwitchRef, SwitchProps>(
             width: "45%",
             height: "100%",
             borderRadius: "100px",
-            background: "$primary",
+            background: `${primaryColor}`,
             transition: "0.4 ease-in-out",
           }}
         ></Box>

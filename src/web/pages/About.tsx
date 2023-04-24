@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, LinkButton, Paragraph, Title } from "../component/styled";
-import { useColorModeValue } from "../state";
+import { useColorModeValue, usePrimaryColor } from "../state";
 import { FiGithub, FiGlobe, FiHome, FiTwitter } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import useWindowApi from "../hooks/useWindowApi";
@@ -8,6 +8,7 @@ import useWindowApi from "../hooks/useWindowApi";
 function About() {
   const { invoke } = useWindowApi();
   const { colorMode } = useColorModeValue();
+  const { primaryColor } = usePrimaryColor();
   return (
     <Box
       css={{
@@ -28,7 +29,16 @@ function About() {
           height: "10%",
         }}
       >
-        <LinkButton variant={colorMode === "Dark" ? "dark" : "light"} to="/">
+        <LinkButton
+          css={{
+            outlineColor: `${primaryColor}`,
+            "&:hover": {
+              color: `${primaryColor}`,
+            },
+          }}
+          variant={colorMode === "Dark" ? "dark" : "light"}
+          to="/"
+        >
           <FiHome size={14} />
         </LinkButton>
       </Box>
@@ -104,8 +114,9 @@ function About() {
               }`,
             }}
           >
-            🎉Yes it is and I plan on making sure it stays that way.But you can
-            donate if you want to
+            🎉For the most part yes it is and I plan on making sure it stays
+            that way.But you can upgrade to other tiers to make your clipboard
+            history last longer.and you can always donate
           </Paragraph>
         </Box>
         <Box
@@ -222,8 +233,9 @@ function About() {
               background: `${
                 colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
               }`,
-              color: "$primary",
+              color: `${primaryColor}`,
               cursor: "pointer",
+              outlineColor: `${primaryColor}`,
             }}
             onClick={() => {
               invoke.openLinkInBrowserWindow("https://twitter.com/diff_dev");
@@ -237,8 +249,9 @@ function About() {
               background: `${
                 colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
               }`,
-              color: "$primary",
+              color: `${primaryColor}`,
               cursor: "pointer",
+              outlineColor: `${primaryColor}`,
             }}
             onClick={() => {
               invoke.openLinkInBrowserWindow("https://github.com/Inalegwu");
@@ -252,8 +265,9 @@ function About() {
               background: `${
                 colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
               }`,
-              color: "$primary",
+              color: `${primaryColor}`,
               cursor: "pointer",
+              outlineColor: `${primaryColor}`,
             }}
             onClick={() => {
               invoke.openLinkInBrowserWindow(

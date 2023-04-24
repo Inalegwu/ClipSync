@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Paragraph } from "./styled";
 import toast from "react-hot-toast";
-import { useColorModeValue } from "../state";
+import { useColorModeValue, usePrimaryColor } from "../state";
 import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
 import { ClipType } from "../../shared/utils/types";
@@ -14,6 +14,7 @@ export interface ClipItemProps {
 function ClipItem({ data }: ClipItemProps) {
   const { invoke } = useWindowApi();
   const { colorMode } = useColorModeValue();
+  const { primaryColor } = usePrimaryColor();
 
   async function copy() {
     // await invoke.appendToClipBoard(data);
@@ -58,11 +59,12 @@ function ClipItem({ data }: ClipItemProps) {
           onClick={copy}
           css={{
             background: `${colorMode === "Dark" ? "black" : "$whiteMuted"}`,
-            color: "$primary",
+            color: `${primaryColor}`,
             "&:hover": {
-              background: "$primary",
+              background: `${primaryColor}`,
               color: "white",
             },
+            outlineColor: `${primaryColor}`,
           }}
         >
           <FiCopy size={13} />
@@ -76,6 +78,7 @@ function ClipItem({ data }: ClipItemProps) {
               background: "$danger",
               color: "white",
             },
+            outlineColor: `${primaryColor}`,
           }}
         >
           <FiDelete size={13} />

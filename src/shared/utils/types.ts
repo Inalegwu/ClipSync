@@ -6,6 +6,7 @@ export interface SettingsData {
   colorMode: ColorMode;
   syncState: boolean;
   syncFrequency: SyncFrequency;
+  color: string;
 }
 
 export type ClipItemType = "IMAGE" | "HTML" | "TEXT";
