@@ -14,13 +14,19 @@ import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
 import { SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
-import FrequencyPicker from "../component/FrequencyPicker";
+import FrequencyPicker, {
+  FrequencyPickerRef,
+} from "../component/FrequencyPicker";
+import { useSyncState } from "../state/syncState";
 
 function Settings() {
   const { colorMode, setColorMode } = useColorModeValue();
+  const { syncState, changeSyncFrequency, changeSyncState, syncFrequency } =
+    useSyncState();
   const { invoke } = useWindowApi();
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
+  const frequencyRef = React.useRef<FrequencyPickerRef>(null);
 
   React.useEffect(() => {
     if (colorMode === "Dark") {
@@ -28,6 +34,13 @@ function Settings() {
     } else {
       themeSwitchRef.current?.setActive(false);
     }
+    if (syncState === true) {
+      syncSwitchRef.current?.setActive(true);
+    } else {
+      syncSwitchRef.current?.setActive(false);
+    }
+    console.log(syncFrequency);
+    frequencyRef.current?.setOption(syncFrequency);
   }, []);
 
   function activateDarkMode() {
@@ -50,16 +63,31 @@ function Settings() {
     console.log(isActive);
 
     if (isActive === false) {
+      toast.success("Yayyy...You've Activated Syncing", {
+        icon: "🎉",
+        duration: 800,
+      });
       syncSwitchRef.current?.setActive(true);
+      changeSyncState(syncSwitchRef?.current?.active()!);
     } else {
+      toast.success("Awww...You've Turned Off Syncing", {
+        icon: "😔",
+        duration: 800,
+      });
       syncSwitchRef.current?.setActive(false);
+      changeSyncState(syncSwitchRef?.current?.active()!);
     }
+  }
+
+  function setFrequency(value: any) {
+    frequencyRef.current?.setOption(value);
+    changeSyncFrequency(value);
   }
 
   function saveSettings() {
     const settingsData: SettingsData = {
       colorMode,
-      syncFrequency: new Date(),
+      syncFrequency: frequencyRef.current?.option()!,
       syncState: syncSwitchRef.current?.active()!,
     };
     invoke
@@ -112,6 +140,7 @@ function Settings() {
             <Paragraph
               css={{
                 color: `${colorMode === "Dark" ? "white" : "black"}`,
+                fontSize: "13px",
               }}
             >
               Dark Mode
@@ -122,6 +151,7 @@ function Settings() {
             <Paragraph
               css={{
                 color: `${colorMode === "Dark" ? "white" : "black"}`,
+                fontSize: "13px",
               }}
             >
               Sync
@@ -130,7 +160,10 @@ function Settings() {
           </SettingsItem>
           <SettingsItem>
             <Paragraph
-              css={{ color: `${colorMode === "Dark" ? "white" : "black"}` }}
+              css={{
+                color: `${colorMode === "Dark" ? "white" : "black"}`,
+                fontSize: "13px",
+              }}
             >
               Color
             </Paragraph>
@@ -143,11 +176,14 @@ function Settings() {
           </SettingsItem>
           <SettingsItem>
             <Paragraph
-              css={{ color: `${colorMode === "Dark" ? "white" : "black"}` }}
+              css={{
+                color: `${colorMode === "Dark" ? "white" : "black"}`,
+                fontSize: "13px",
+              }}
             >
               Sync Frequency
             </Paragraph>
-            <FrequencyPicker />
+            <FrequencyPicker onChange={setFrequency} ref={frequencyRef} />
           </SettingsItem>
         </Box>
         <Button
@@ -155,6 +191,7 @@ function Settings() {
           css={{
             background: "$primary",
             marginTop: "$2",
+            cursor: "pointer",
           }}
         >
           <Paragraph css={{ color: "white" }}>Save Settings</Paragraph>
@@ -167,8 +204,10 @@ function Settings() {
           style: {
             padding: "5px",
             width: "200px",
+            fontSize: "14px",
             background: `${colorMode === "Dark" ? "black" : "white"}`,
             color: `${colorMode === "Dark" ? "white" : "black"}`,
+            fontFamily: "Nunito",
           },
         }}
       />

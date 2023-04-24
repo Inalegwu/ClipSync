@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useColorModeValue } from "../state";
 import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
+import { ClipType } from "../../shared/utils/types";
+import { NativeImage } from "electron";
 
 export interface ClipItemProps {
   data: string;
@@ -14,7 +16,7 @@ function ClipItem({ data }: ClipItemProps) {
   const { colorMode } = useColorModeValue();
 
   async function copy() {
-    await invoke.appendToClipBoard(data);
+    // await invoke.appendToClipBoard(data);
     toast.success("Copied", {
       style: {
         width: "200px",

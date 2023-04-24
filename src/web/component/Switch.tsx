@@ -22,7 +22,6 @@ const Switch = React.forwardRef<SwitchRef, SwitchProps>(
     }, [isActive]);
 
     const setActive = React.useCallback((state: boolean) => {
-      console.log("New State : ", state);
       setIsActive(state);
     }, []);
 
@@ -38,6 +37,7 @@ const Switch = React.forwardRef<SwitchRef, SwitchProps>(
           borderRadius: "9999px",
           display: "inline-block",
           background: `${colorMode === "Dark" ? "black" : "$whiteMuted"}`,
+          outlineColor: "$primary",
         }}
       >
         <Box

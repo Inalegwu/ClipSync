@@ -5,3 +5,4 @@ export * from "./Button";
 export * from "./Link";
 export * from "./Title";
 export * from "./Select";
+export * from "./Image";

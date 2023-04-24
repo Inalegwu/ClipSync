@@ -1,6 +1,7 @@
 import path from "path";
 import { BrowserWindow, Tray, app, globalShortcut } from "electron";
 import { ipcMain } from "./shared/ipcs/ipcs";
+import db from "./shared/utils/db";
 
 const { handle, invoke } = ipcMain;
 

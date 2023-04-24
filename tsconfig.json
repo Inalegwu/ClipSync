@@ -7,10 +7,7 @@
     "resolveJsonModule": true,
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
-    "strict": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "strict": true
   },
   "include": ["src", "tailwind.config.js"],
   "ts-node": {

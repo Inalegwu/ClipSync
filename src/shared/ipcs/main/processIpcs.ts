@@ -1,11 +1,20 @@
 import { app, clipboard } from "electron";
 import { createIpcSlice } from "interprocess";
-import * as fs from "fs";
 import path from "path";
+import readClipBoard from "../../utils/readClipboard";
+import db from "../../utils/db";
 
 export const ProcessIpcs = createIpcSlice({
   main: {
     async readClipBoard() {
+      // const clipBoardData = readClipBoard();
+      // db.allDocs()
+      //   .then((res) => {
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
       const clipBoardData = clipboard.readText();
 
       // const clipText = clipboard.readText();

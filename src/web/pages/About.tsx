@@ -36,6 +36,7 @@ function About() {
         css={{
           width: "100%",
           height: "90%",
+          overflowY: "scroll",
           display: "flex",
           gap: "10px",
           flexDirection: "column",
@@ -69,43 +70,10 @@ function About() {
               }`,
             }}
           >
-            Well I work with my phone and my laptop a lot and I do a lot of
+            📱💻Well I work with my phone and my laptop a lot and I do a lot of
             copying and pasting and so I decided to build ClipSync to give me
             access to whatever I copy on my laptop or phone in realtime.Did I
-            mention it was realtime ?
-          </Paragraph>
-        </Box>
-        <Box
-          css={{
-            background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
-            display: "flex",
-            flexDirection: "column",
-            padding: "$2",
-            borderRadius: "5px",
-            gap: "5px",
-          }}
-        >
-          <Title
-            css={{
-              fontSize: "15px",
-              color: `${
-                colorMode === "Dark" ? "$background" : "$backgroundDark"
-              }`,
-            }}
-          >
-            Who is ClipSync For ?
-          </Title>
-          <Paragraph
-            css={{
-              fontSize: "12px",
-              color: `${
-                colorMode === "Dark" ? "$background" : "$backgroundDark"
-              }`,
-            }}
-          >
-            It's for everyone. So you don't have to type everything you see in
-            your laptop into your phone just copy it and have it available when
-            you go into your phone
+            mention it was realtime 🤸‍♂️?
           </Paragraph>
         </Box>
         <Box
@@ -136,8 +104,105 @@ function About() {
               }`,
             }}
           >
-            Yes it is and I plan on making sure it stays that way.But you can
+            🎉Yes it is and I plan on making sure it stays that way.But you can
             donate if you want to
+          </Paragraph>
+        </Box>
+        <Box
+          css={{
+            background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+            display: "flex",
+            flexDirection: "column",
+            padding: "$2",
+            borderRadius: "5px",
+            gap: "5px",
+          }}
+        >
+          <Title
+            css={{
+              fontSize: "15px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            Who is ClipSync For ?
+          </Title>
+          <Paragraph
+            css={{
+              fontSize: "12px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            🧑🏾‍👩🏼‍🧒🏽It's for everyone. So you don't have to type everything you
+            see in your laptop into your phone just copy it and have it
+            available when you go into your phone
+          </Paragraph>
+        </Box>
+        <Box
+          css={{
+            background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+            display: "flex",
+            flexDirection: "column",
+            padding: "$2",
+            borderRadius: "5px",
+            gap: "5px",
+          }}
+        >
+          <Title
+            css={{
+              fontSize: "15px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            I Don't want any Syncing . just let me see my clipboard
+          </Title>
+          <Paragraph
+            css={{
+              fontSize: "12px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            😔Theres an option for that in the settings.You can treat ClipSync
+            as a standalone Clipboard manager if you like
+          </Paragraph>
+        </Box>
+        <Box
+          css={{
+            background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+            display: "flex",
+            flexDirection: "column",
+            padding: "$2",
+            borderRadius: "5px",
+            gap: "5px",
+          }}
+        >
+          <Title
+            css={{
+              fontSize: "15px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            How About Images
+          </Title>
+          <Paragraph
+            css={{
+              fontSize: "12px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            😉Images are at the top of the priority list and you can expect them
+            soon
           </Paragraph>
         </Box>
         <Box

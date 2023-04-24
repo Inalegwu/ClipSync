@@ -6,15 +6,22 @@ import { FiSettings, FiInfo } from "react-icons/fi";
 import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
+import { useSyncState } from "./state/syncState";
+import { ClipType } from "../shared/utils/types";
+import ClipImage from "./component/ClipImage";
+import db from "../shared/utils/db";
+import superjson from "superjson";
+import * as UUId from "uuid";
 
 export const App = () => {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
+  const { changeSyncState, changeSyncFrequency } = useSyncState();
   const { clipBoardState, updateClipBoardState } = useClipBoard();
   const [clipBoardData, setClipBoardData] = React.useState<Array<string>>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     invoke.readClipBoard().then((res) => {
       setClipBoardData([res]);
     });
@@ -23,6 +30,8 @@ export const App = () => {
   React.useEffect(() => {
     invoke.readSettings().then((settings) => {
       setColorMode(settings.colorMode);
+      changeSyncState(settings.syncState);
+      changeSyncFrequency(settings.syncFrequency);
     });
   }, []);
 
@@ -103,6 +112,7 @@ export const App = () => {
         css={{
           height: "10%",
           width: "100%",
+          border: "0.1px solid #3838383c",
         }}
         variant={colorMode === "Dark" ? "dark" : "light"}
       />
@@ -114,8 +124,10 @@ export const App = () => {
           style: {
             padding: "5px",
             width: "50px",
+            fontSize: "14px",
             background: `${colorMode === "Dark" ? "black" : "white"}`,
             color: `${colorMode === "Dark" ? "white" : "black"}`,
+            fontFamily: "Nunito",
           },
         }}
       />
