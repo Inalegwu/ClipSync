@@ -4,3 +4,4 @@ export * from "./Paragraph";
 export * from "./Button";
 export * from "./Link";
 export * from "./Title";
+export * from "./Select";

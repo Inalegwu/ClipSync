@@ -1,8 +1,8 @@
 import React from "react";
 import useWindowApi from "./hooks/useWindowApi";
-import { useColorModeValue } from "./state";
+import { useClipBoard, useColorModeValue } from "./state";
 import { Box, Input, LinkButton } from "./component/styled";
-import { FiSettings } from "react-icons/fi";
+import { FiSettings, FiInfo } from "react-icons/fi";
 import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
@@ -10,10 +10,11 @@ import "./index.css";
 export const App = () => {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
+  const { clipBoardState, updateClipBoardState } = useClipBoard();
   const [clipBoardData, setClipBoardData] = React.useState<Array<string>>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     invoke.readClipBoard().then((res) => {
       setClipBoardData([res]);
     });
@@ -53,6 +54,20 @@ export const App = () => {
         }}
       >
         <LinkButton
+          to="/about"
+          css={{
+            width: "30px",
+            height: "30px",
+            "&:hover": {
+              background: "$primary",
+              color: "white",
+            },
+          }}
+          variant={colorMode === "Dark" ? "dark" : "light"}
+        >
+          <FiInfo size={14} />
+        </LinkButton>
+        <LinkButton
           to="/settings"
           css={{
             width: "30px",
@@ -91,7 +106,19 @@ export const App = () => {
         }}
         variant={colorMode === "Dark" ? "dark" : "light"}
       />
-      <Toaster position="bottom-center" reverseOrder={true} />
+      <Toaster
+        position="bottom-center"
+        reverseOrder={true}
+        toastOptions={{
+          duration: 700,
+          style: {
+            padding: "5px",
+            width: "50px",
+            background: `${colorMode === "Dark" ? "black" : "white"}`,
+            color: `${colorMode === "Dark" ? "white" : "black"}`,
+          },
+        }}
+      />
     </Box>
   );
 };

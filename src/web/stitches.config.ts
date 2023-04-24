@@ -1,12 +1,12 @@
 import { createStitches } from "@stitches/react";
-export const { styled } = createStitches({
+export const { styled, config } = createStitches({
   theme: {
     colors: {
       background: "#f1f1f1",
       backgroundDark: "#000000",
       whiteMuted: "#e0e0e09d",
       blackMuted: "#161515b7",
-      primary: "#551986",
+      primary: "#1a5ab9",
       danger: "#d82828",
       success: "#29cc6d",
     },

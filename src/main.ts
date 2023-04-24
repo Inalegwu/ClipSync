@@ -1,5 +1,5 @@
 import path from "path";
-import { BrowserWindow, app, globalShortcut } from "electron";
+import { BrowserWindow, Tray, app, globalShortcut } from "electron";
 import { ipcMain } from "./shared/ipcs/ipcs";
 
 const { handle, invoke } = ipcMain;
@@ -10,6 +10,7 @@ app.whenReady().then(() => {
     autoHideMenuBar: true,
     width: 400,
     height: 400,
+    icon: path.join(__dirname, "assets/images/AppIcon.ico"),
     webPreferences: {
       preload: path.resolve(__dirname, "preload.js"),
       sandbox: false,
@@ -25,6 +26,9 @@ app.whenReady().then(() => {
   handle.appendToClipBoard();
   handle.readSettings();
   handle.saveSettings();
+  handle.openLinkInBrowserWindow();
+
+  // new Tray(path.join(__dirname, "assets/images/AppIcon.ico"));
 
   globalShortcut.register("Shift+Space", () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();

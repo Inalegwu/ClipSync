@@ -1,7 +1,26 @@
+@font-face {
+  font-family: Nunito;
+  font-weight: 100;
+  src: url("/src/assets/fonts/Nunito/Nunito-Light.ttf");
+}
+
+@font-face {
+  font-family: Nunito;
+  font-weight: 500;
+  src: url("/src/assets/fonts/Nunito/Nunito-Medium.ttf");
+}
+
+@font-face {
+  font-family: Nunito;
+  font-weight: 600;
+  src: url("/src/assets/fonts/Nunito/Nunito-Bold.ttf");
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Nunito;
 }
 body {
   background: transparent;

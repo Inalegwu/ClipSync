@@ -9,8 +9,6 @@ export const ConfigIpcs = createIpcSlice({
   main: {
     async saveSettings(_, settings: SettingsData) {
       const stringifiedSettings = superjson.stringify(settings);
-      console.log(stringifiedSettings);
-
       fs.writeFile(
         path.join(app.getPath("appData"), "serpent/settings.json"),
         stringifiedSettings,

@@ -6,7 +6,14 @@ import path from "path";
 export const ProcessIpcs = createIpcSlice({
   main: {
     async readClipBoard() {
-      const clipBoardData = clipboard.readText("clipboard");
+      const clipBoardData = clipboard.readText();
+
+      // const clipText = clipboard.readText();
+      // const clipImage = clipboard.readImage();
+      // const clipHTMl = clipboard.readHTML();
+      // clipBoardData.push(clipImage);
+      // clipBoardData.push(clipText);
+      // clipBoardData.push(clipHTMl);
 
       return clipBoardData;
     },

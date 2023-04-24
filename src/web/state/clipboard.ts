@@ -9,6 +9,6 @@ export interface ClipBoardState {
 export const useClipBoard = create<ClipBoardState>((set) => ({
   clipBoardState: null,
   updateClipBoardState: (value) =>
-    set((state) => ({ clipBoardState: [...state.clipBoardState!, value] })),
+    set((state) => ({ clipBoardState: [value] })),
   clearClipBoardState: () => set({ clipBoardState: [] }),
 }));

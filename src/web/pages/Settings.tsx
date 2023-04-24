@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Button, LinkButton, Paragraph, Title } from "../component/styled";
+import {
+  Box,
+  Button,
+  Input,
+  LinkButton,
+  Paragraph,
+  Title,
+} from "../component/styled";
 import { useColorModeValue } from "../state";
 import { FiHome } from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
@@ -7,6 +14,7 @@ import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
 import { SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
+import FrequencyPicker from "../component/FrequencyPicker";
 
 function Settings() {
   const { colorMode, setColorMode } = useColorModeValue();
@@ -14,7 +22,7 @@ function Settings() {
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     if (colorMode === "Dark") {
       themeSwitchRef.current?.setActive(true);
     } else {
@@ -57,7 +65,7 @@ function Settings() {
     invoke
       .saveSettings(settingsData)
       .then(() => {
-        toast.success("Save Successfully");
+        toast.success("Saved Successfully");
       })
       .catch((err) => {
         toast.error("An Error Occurred");
@@ -120,6 +128,27 @@ function Settings() {
             </Paragraph>
             <Switch onClick={activateSyncing} ref={syncSwitchRef} />
           </SettingsItem>
+          <SettingsItem>
+            <Paragraph
+              css={{ color: `${colorMode === "Dark" ? "white" : "black"}` }}
+            >
+              Color
+            </Paragraph>
+            <Input
+              css={{
+                background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+              }}
+              type="color"
+            />
+          </SettingsItem>
+          <SettingsItem>
+            <Paragraph
+              css={{ color: `${colorMode === "Dark" ? "white" : "black"}` }}
+            >
+              Sync Frequency
+            </Paragraph>
+            <FrequencyPicker />
+          </SettingsItem>
         </Box>
         <Button
           onClick={saveSettings}
@@ -131,7 +160,18 @@ function Settings() {
           <Paragraph css={{ color: "white" }}>Save Settings</Paragraph>
         </Button>
       </Box>
-      <Toaster position="bottom-center" />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          duration: 700,
+          style: {
+            padding: "5px",
+            width: "200px",
+            background: `${colorMode === "Dark" ? "black" : "white"}`,
+            color: `${colorMode === "Dark" ? "white" : "black"}`,
+          },
+        }}
+      />
     </Box>
   );
 }
