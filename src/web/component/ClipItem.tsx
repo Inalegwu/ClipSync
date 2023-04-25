@@ -6,6 +6,7 @@ import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
 import { ClipType } from "../../shared/utils/types";
 import { NativeImage } from "electron";
+import db from "../../shared/utils/db";
 
 export interface ClipItemProps {
   data: string;

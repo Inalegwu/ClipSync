@@ -33,7 +33,8 @@ function About() {
           css={{
             outlineColor: `${primaryColor}`,
             "&:hover": {
-              color: `${primaryColor}`,
+              background: `${primaryColor}`,
+              color: "white",
             },
           }}
           variant={colorMode === "Dark" ? "dark" : "light"}
@@ -48,12 +49,13 @@ function About() {
           height: "90%",
           overflowY: "scroll",
           display: "flex",
-          gap: "10px",
+          gap: "$2",
           flexDirection: "column",
         }}
       >
         <Box
           css={{
+            marginTop: "$2",
             background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
             display: "flex",
             flexDirection: "column",
@@ -114,9 +116,8 @@ function About() {
               }`,
             }}
           >
-            🎉For the most part yes it is and I plan on making sure it stays
-            that way.But you can upgrade to other tiers to make your clipboard
-            history last longer.and you can always donate
+            🎉Yes it is and I plan on making sure it stays that way.But you can
+            donate if you want to
           </Paragraph>
         </Box>
         <Box

@@ -7,8 +7,13 @@ import {
   Paragraph,
   Title,
 } from "../component/styled";
-import { useColorModeValue, usePrimaryColor, useSyncState } from "../state";
-import { FiHome } from "react-icons/fi";
+import {
+  useColorModeValue,
+  usePrimaryColor,
+  useSyncState,
+  useUserState,
+} from "../state";
+import { FiCopy, FiHome, FiInfo, FiLock, FiRefreshCw } from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
@@ -17,16 +22,17 @@ import { Toaster, toast } from "react-hot-toast";
 import FrequencyPicker, {
   FrequencyPickerRef,
 } from "../component/FrequencyPicker";
+import { v4 } from "uuid";
+import generateAppId from "../../shared/utils/generateAppId";
 
 function Settings() {
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
-  const { syncState, changeSyncFrequency, changeSyncState, syncFrequency } =
-    useSyncState();
+  const { syncState, changeSyncState } = useSyncState();
+  const { appId, setAppId } = useUserState();
   const { invoke } = useWindowApi();
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
-  const frequencyRef = React.useRef<FrequencyPickerRef>(null);
 
   React.useEffect(() => {
     if (colorMode === "Dark") {
@@ -39,8 +45,9 @@ function Settings() {
     } else {
       syncSwitchRef.current?.setActive(false);
     }
-    console.log(syncFrequency);
-    frequencyRef.current?.setOption(syncFrequency);
+    invoke.readSettings().then((res) => {
+      setAppId(res.appId!);
+    });
   }, []);
 
   function activateDarkMode() {
@@ -79,17 +86,25 @@ function Settings() {
     }
   }
 
-  function setFrequency(value: any) {
-    frequencyRef.current?.setOption(value);
-    changeSyncFrequency(value);
+  function copyAppId() {
+    invoke.appendToClipBoard(appId!);
+  }
+
+  function refreshAppId() {
+    toast.success(
+      "Changing your App ID means you'll lose access to all your clips and the mobile app will be out of sync",
+      { style: { fontSize: "12px", width: "100%" }, duration: 5000 }
+    );
+    const newAppId = generateAppId();
+    setAppId(newAppId);
   }
 
   function saveSettings() {
     const settingsData: SettingsData = {
       colorMode,
-      syncFrequency: frequencyRef.current?.option()!,
       syncState: syncSwitchRef.current?.active()!,
       color: primaryColor,
+      appId: appId,
     };
     invoke
       .saveSettings(settingsData)
@@ -127,7 +142,8 @@ function Settings() {
           css={{
             outlineColor: `${primaryColor}`,
             "&:hover": {
-              color: `${primaryColor}`,
+              background: `${primaryColor}`,
+              color: "white",
             },
           }}
           to="/"
@@ -191,17 +207,88 @@ function Settings() {
               type="color"
             />
           </SettingsItem>
-          <SettingsItem>
+          <Title
+            css={{
+              fontSize: "14px",
+              marginTop: "$3",
+              color: `${colorMode === "Dark" ? "white" : "$backgroundDark"}`,
+            }}
+          >
+            AppID
+          </Title>
+          <Paragraph
+            css={{
+              fontSize: "10px",
+              marginTop: "$1",
+              fontStyle: "italic",
+              color: `${colorMode === "Light" ? "$blackMuted" : "$whiteMuted"}`,
+            }}
+          >
+            use this to access clips on your mobile app.keep this hidden
+            otherwise people will have access to your clips
+          </Paragraph>
+          <Box
+            css={{
+              width: "100%",
+              background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "$2",
+              marginTop: "$2",
+              borderRadius: "5px",
+            }}
+          >
             <Paragraph
               css={{
-                color: `${colorMode === "Dark" ? "white" : "black"}`,
-                fontSize: "13px",
+                fontSize: "12px",
+                color: `${
+                  colorMode === "Dark" ? "$background" : "$backgroundDark"
+                }`,
               }}
             >
-              Sync Frequency
+              {appId}
             </Paragraph>
-            <FrequencyPicker onChange={setFrequency} ref={frequencyRef} />
-          </SettingsItem>
+            <Box css={{ display: "flex", gap: "$2" }}>
+              {/* button to copy appId */}
+              <Button
+                onClick={copyAppId}
+                css={{
+                  color: `${primaryColor}`,
+                  background: `${
+                    colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
+                  }`,
+                  "&:hover": {
+                    background: `${primaryColor}`,
+                    color: "white",
+                  },
+                  cursor: "pointer",
+                }}
+                variant={colorMode === "Dark" ? "dark" : "light"}
+              >
+                <FiCopy />
+              </Button>
+              {/* button to regenerate app id */}
+              <Button
+                onClick={refreshAppId}
+                css={{
+                  color: `${primaryColor}`,
+                  background: `${
+                    colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
+                  }`,
+                  "&:hover": {
+                    background: `${primaryColor}`,
+                    color: "white",
+                  },
+                  cursor: "pointer",
+                }}
+                variant={colorMode === "Dark" ? "dark" : "light"}
+              >
+                <FiRefreshCw />
+              </Button>
+            </Box>
+          </Box>
         </Box>
         <Button
           onClick={saveSettings}

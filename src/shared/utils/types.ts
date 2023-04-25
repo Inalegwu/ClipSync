@@ -5,8 +5,8 @@ import { NativeImage } from "electron";
 export interface SettingsData {
   colorMode: ColorMode;
   syncState: boolean;
-  syncFrequency: SyncFrequency;
   color: string;
+  appId: string | null;
 }
 
 export type ClipItemType = "IMAGE" | "HTML" | "TEXT";

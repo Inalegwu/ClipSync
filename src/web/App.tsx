@@ -1,22 +1,30 @@
 import React from "react";
 import useWindowApi from "./hooks/useWindowApi";
-import { useColorModeValue, usePrimaryColor } from "./state";
+import { useColorModeValue, usePrimaryColor, useUserState } from "./state";
 import { Box, Input, LinkButton } from "./component/styled";
 import { FiSettings, FiInfo } from "react-icons/fi";
 import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
+import db from "../shared/utils/db";
+import { v4 } from "uuid";
+
+interface DocumentType {
+  data: string;
+}
 
 export const App = () => {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
-  const { changeSyncState, changeSyncFrequency } = useSyncState();
+  const { changeSyncState } = useSyncState();
+  const { setEmail, setAppId, appId } = useUserState();
   const [clipBoardData, setClipBoardData] = React.useState<Array<string>>([]);
+  // let clipBoardData: Array<string> = [""];
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     invoke.readClipBoard().then((res) => {
       setClipBoardData([res]);
     });
@@ -26,8 +34,8 @@ export const App = () => {
     invoke.readSettings().then((settings) => {
       setColorMode(settings.colorMode);
       changeSyncState(settings.syncState);
-      changeSyncFrequency(settings.syncFrequency);
       setPrimaryColor(settings.color);
+      setAppId(settings.appId!);
     });
   }, []);
 
@@ -80,7 +88,8 @@ export const App = () => {
             height: "30px",
             outlineColor: `${primaryColor}`,
             "&:hover": {
-              color: `${primaryColor}`,
+              background: `${primaryColor}`,
+              color: "white",
             },
           }}
           variant={colorMode === "Dark" ? "dark" : "light"}
@@ -98,6 +107,7 @@ export const App = () => {
       >
         {clipBoardData?.map((data, idx) => {
           return <ClipItem data={data} key={idx} />;
+          // return <Box key={idx}>{data.id}</Box>;
         })}
       </Box>
       <Input
@@ -114,7 +124,7 @@ export const App = () => {
           height: "10%",
           width: "100%",
           border: "0.1px solid #3838383c",
-          outlineColor: `${primaryColor}`,
+          outline: "none",
         }}
         variant={colorMode === "Dark" ? "dark" : "light"}
       />

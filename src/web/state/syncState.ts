@@ -8,14 +8,10 @@ export type SyncFrequency =
 
 export interface SyncStateProps {
   syncState: boolean;
-  syncFrequency: SyncFrequency;
-  changeSyncFrequency: (frequency: SyncFrequency) => void;
   changeSyncState: (state: boolean) => void;
 }
 
 export const useSyncState = create<SyncStateProps>((set) => ({
   syncState: true,
-  syncFrequency: "DAILY",
-  changeSyncFrequency: (freq) => set(() => ({ syncFrequency: freq })),
   changeSyncState: (state) => set(() => ({ syncState: state })),
 }));
