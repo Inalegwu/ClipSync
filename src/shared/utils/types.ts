@@ -11,12 +11,13 @@ export interface SettingsData {
 
 export type ClipItemType = "IMAGE" | "HTML" | "TEXT";
 
-export interface ClipType {
-  type: ClipItemType;
-  data: NativeImage | string;
+export interface ClipBoardItem {
+  id: string;
+  data: string;
+  appId: string;
 }
 
 export interface ClipStore {
   clipPrefix: string;
-  clips: Array<ClipType>;
+  clips: Array<ClipBoardItem>;
 }

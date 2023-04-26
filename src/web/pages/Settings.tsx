@@ -33,6 +33,7 @@ function Settings() {
   const { invoke } = useWindowApi();
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
+  const [changes, setChanges] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (colorMode === "Dark") {
@@ -51,9 +52,8 @@ function Settings() {
   }, []);
 
   function activateDarkMode() {
+    setChanges(true);
     const isActive = themeSwitchRef.current?.active();
-
-    console.log(isActive);
 
     if (isActive === false) {
       themeSwitchRef.current?.setActive(true);
@@ -65,9 +65,8 @@ function Settings() {
   }
 
   function activateSyncing() {
+    setChanges(true);
     const isActive = syncSwitchRef.current?.active();
-
-    console.log(isActive);
 
     if (isActive === false) {
       toast.success("Yayyy...You've Activated Syncing", {
@@ -88,9 +87,11 @@ function Settings() {
 
   function copyAppId() {
     invoke.appendToClipBoard(appId!);
+    toast.success("Copied");
   }
 
   function refreshAppId() {
+    setChanges(true);
     toast.success(
       "Changing your App ID means you'll lose access to all your clips and the mobile app will be out of sync",
       { style: { fontSize: "12px", width: "100%" }, duration: 5000 }
@@ -195,6 +196,7 @@ function Settings() {
             </Paragraph>
             <Input
               onChange={(e) => {
+                setChanges(true);
                 setPrimaryColor(e.currentTarget.value);
               }}
               defaultValue={primaryColor}
@@ -243,9 +245,7 @@ function Settings() {
             <Paragraph
               css={{
                 fontSize: "12px",
-                color: `${
-                  colorMode === "Dark" ? "$background" : "$backgroundDark"
-                }`,
+                color: `${primaryColor}`,
               }}
             >
               {appId}
@@ -292,10 +292,11 @@ function Settings() {
         </Box>
         <Button
           onClick={saveSettings}
+          disabled={changes === false ? true : false}
           css={{
-            background: `${primaryColor}`,
+            background: `${changes === false ? "$blackMuted" : primaryColor}`,
             marginTop: "$2",
-            cursor: "pointer",
+            cursor: `${changes === false ? "not-allowed" : "pointer"}`,
             outlineColor: `${primaryColor}`,
           }}
         >

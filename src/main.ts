@@ -16,8 +16,8 @@ app.whenReady().then(() => {
       preload: path.resolve(__dirname, "preload.js"),
       sandbox: false,
     },
-    x: 950,
-    y: 300,
+    x: 960,
+    y: 305,
   });
 
   mainWindow.loadFile("dist/index.html");

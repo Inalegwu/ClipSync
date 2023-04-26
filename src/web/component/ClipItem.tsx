@@ -1,21 +1,21 @@
 import React from "react";
 import { Box, Button, Paragraph } from "./styled";
 import toast from "react-hot-toast";
-import { useColorModeValue, usePrimaryColor } from "../state";
+import { useClipBoard, useColorModeValue, usePrimaryColor } from "../state";
 import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
-import { ClipType } from "../../shared/utils/types";
-import { NativeImage } from "electron";
+import { ClipBoardItem } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
 
 export interface ClipItemProps {
-  data: string;
+  data: ClipBoardItem;
 }
 
 function ClipItem({ data }: ClipItemProps) {
   const { invoke } = useWindowApi();
   const { colorMode } = useColorModeValue();
   const { primaryColor } = usePrimaryColor();
+  const { deleteClipBoardItem } = useClipBoard();
 
   async function copy() {
     // await invoke.appendToClipBoard(data);
@@ -27,6 +27,7 @@ function ClipItem({ data }: ClipItemProps) {
   }
 
   function deleteClip() {
+    deleteClipBoardItem(data.id);
     toast.success("Deleted", {
       style: {
         width: "200px",
@@ -53,7 +54,7 @@ function ClipItem({ data }: ClipItemProps) {
           fontSize: "13px",
         }}
       >
-        {data}
+        {data.data}
       </Paragraph>
       <Box css={{ display: "flex", gap: "$1" }}>
         <Button
