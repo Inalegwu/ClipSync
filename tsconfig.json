@@ -7,7 +7,11 @@
     "resolveJsonModule": true,
     "lib": ["DOM", "ESNext"],
     "jsx": "react-jsx",
-    "strict": true
+    "strict": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "importsNotUsedAsValues": "error"
   },
   "include": ["src", "tailwind.config.js"],
   "ts-node": {

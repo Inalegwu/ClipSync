@@ -12,7 +12,6 @@ import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
-import db from "../shared/utils/db";
 import { v4 } from "uuid";
 
 export const App = () => {
@@ -106,7 +105,7 @@ export const App = () => {
           overflowY: "scroll",
         }}
       >
-        {clipBoardData?.map((data, idx) => {
+        {clipBoardData?.map((data) => {
           return <ClipItem data={data} key={data.id} />;
           // return <Box key={idx}>{data.id}</Box>;
         })}

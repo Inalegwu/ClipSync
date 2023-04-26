@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useClipBoard, useColorModeValue, usePrimaryColor } from "../state";
 import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
-import { ClipBoardItem } from "../../shared/utils/types";
+import type { ClipBoardItem } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
 
 export interface ClipItemProps {
