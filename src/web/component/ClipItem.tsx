@@ -18,7 +18,7 @@ function ClipItem({ data }: ClipItemProps) {
   const { deleteClipBoardItem } = useClipBoard();
 
   async function copy() {
-    // await invoke.appendToClipBoard(data);
+    await invoke.appendToClipBoard(data.data);
     toast.success("Copied", {
       style: {
         width: "200px",
@@ -55,14 +55,26 @@ function ClipItem({ data }: ClipItemProps) {
         justifyContent: "space-between",
       }}
     >
-      <Paragraph
-        css={{
-          color: `${colorMode === "Dark" ? "white" : "black"}`,
-          fontSize: "13px",
-        }}
-      >
-        {data.data}
-      </Paragraph>
+      {/* data and clipboard data */}
+      <Box css={{ display: "flex", flexDirection: "column", gap: "$1" }}>
+        <Paragraph
+          css={{
+            color: `${colorMode === "Dark" ? "white" : "black"}`,
+            fontSize: "13px",
+          }}
+        >
+          {data.data}
+        </Paragraph>
+        <Paragraph
+          css={{
+            fontSize: "10px",
+            color: `${colorMode === "Dark" ? "$whiteMuted" : "$blackMuted"}`,
+          }}
+        >
+          {data.id}
+        </Paragraph>
+      </Box>
+      {/* actions */}
       <Box css={{ display: "flex", gap: "$1" }}>
         <Button
           onClick={copy}

@@ -1,10 +1,15 @@
 import path from "path";
-import { BrowserWindow, Tray, app, globalShortcut } from "electron";
+import { BrowserWindow, Tray, app, globalShortcut, screen } from "electron";
 import { ipcMain } from "./shared/ipcs/ipcs";
 
 const { handle, invoke } = ipcMain;
 
 app.whenReady().then(() => {
+  // i should probably be using this to determine the position of the window on the screen right?
+  // well that doesn't seem to be how electron wants it to work
+  const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
+    screen.getPrimaryDisplay().workAreaSize;
+
   const mainWindow = new BrowserWindow({
     frame: false,
     autoHideMenuBar: true,
@@ -12,13 +17,13 @@ app.whenReady().then(() => {
     height: 400,
     resizable: false,
     vibrancy: "under-window",
-    icon: path.join(__dirname, "assets/images/AppIcon.ico"),
     webPreferences: {
       preload: path.resolve(__dirname, "preload.js"),
       sandbox: false,
     },
     x: 960,
     y: 305,
+    icon: "./assets/images/AppIcon.ico",
   });
 
   mainWindow.loadFile("dist/index.html");

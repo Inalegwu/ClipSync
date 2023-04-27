@@ -4,8 +4,15 @@ import path from "path";
 import { app } from "electron";
 import * as fs from "fs";
 import superjson from "superjson";
-import { useUserState } from "../../../web/state";
 
+/**
+ *
+ *
+ * ALL IPCS RELATED TO CONFIGURING THE APPLICATIONS
+ * -SETTINGS
+ *  -APPLICATION ID
+ *  -COLOR MODE
+ */
 export const ConfigIpcs = createIpcSlice({
   main: {
     async saveSettings(_, settings: SettingsData) {

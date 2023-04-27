@@ -2,9 +2,14 @@ import React from "react";
 import { Box, Button, LinkButton, Paragraph, Title } from "../component/styled";
 import { useColorModeValue, usePrimaryColor } from "../state";
 import { FiGithub, FiGlobe, FiHome, FiTwitter } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import useWindowApi from "../hooks/useWindowApi";
 
+/**
+ *
+ * STATIC ABOUT PAGE
+ * WON'T CHANGE MUCH IN COMING DAYS
+ *
+ */
 function About() {
   const { invoke } = useWindowApi();
   const { colorMode } = useColorModeValue();

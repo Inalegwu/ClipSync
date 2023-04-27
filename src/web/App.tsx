@@ -12,7 +12,12 @@ import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
-import { v4 } from "uuid";
+
+/**
+ *
+ * IMPORT THE POUCH DB DATABASE
+ *
+ */
 import db from "../shared/utils/db";
 
 export const App = () => {
@@ -23,7 +28,15 @@ export const App = () => {
   const { clipBoardData, setClipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const viewRef = React.useRef<HTMLDivElement>(null);
 
+  /**
+   *
+   * LISTEN TO CLIPBOARD CHANGES,
+   * PUSH TO THE DATABASE AND READ FROM
+   * THE SAME DATABASE IN THE SAME PASS
+   *
+   */
   React.useEffect(() => {
     invoke
       .readClipBoard()
@@ -34,7 +47,9 @@ export const App = () => {
       .then(() => {
         db.allDocs({ include_docs: true, key: appId })
           .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
-            //TODO and here to
+            // TODO work on the type defintion here
+            // this shit is going to hard to figure out
+            // but I'll find a way
             res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
               setClipBoardData({
                 appId: row.doc?.appId,
@@ -48,8 +63,15 @@ export const App = () => {
             console.log(err);
           });
       });
-  }, [inputRef.current?.value]);
+  }, []);
 
+  /**
+   *
+   * THIS SECTION READS IN THE USERS PREFERENCES
+   * FROM STORAGE AND SETS THAT APP STATE APPROPRIATELY
+   * IF THERE IS NO STATE,THE DEFAULT STATES ARE USED
+   *
+   */
   React.useMemo(() => {
     invoke
       .readSettings()
@@ -123,6 +145,7 @@ export const App = () => {
         </LinkButton>
       </Box>
       <Box
+        ref={viewRef}
         css={{
           height: "80%",
           display: "flex",

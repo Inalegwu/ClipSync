@@ -19,10 +19,6 @@ import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
 import type { SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
-import FrequencyPicker, {
-  FrequencyPickerRef,
-} from "../component/FrequencyPicker";
-import { v4 } from "uuid";
 import generateAppId from "../../shared/utils/generateAppId";
 
 function Settings() {
@@ -35,6 +31,10 @@ function Settings() {
   const syncSwitchRef = React.useRef<SwitchRef>(null);
   const [changes, setChanges] = React.useState<boolean>(false);
 
+  /**
+   * ANIMATE THE SWITCHES BASED ON THE STATE SET FROM SETTINGS
+   * DID IT THIS WAY FOR THE COOL ANIMATION
+   */
   React.useEffect(() => {
     if (colorMode === "Dark") {
       themeSwitchRef.current?.setActive(true);
@@ -51,6 +51,9 @@ function Settings() {
     });
   }, []);
 
+  /**
+   * SWITCH UI TO DARK MODE
+   */
   function activateDarkMode() {
     setChanges(true);
     const isActive = themeSwitchRef.current?.active();
@@ -64,6 +67,11 @@ function Settings() {
     }
   }
 
+  /**
+   *
+   * ACTIVATE OR DEACTIVATE SYNCING FOR THE APP
+   *
+   */
   function activateSyncing() {
     setChanges(true);
     const isActive = syncSwitchRef.current?.active();
@@ -90,6 +98,11 @@ function Settings() {
     toast.success("Copied");
   }
 
+  /**
+   *
+   * GENERATE A NEW APPLICATION ID
+   *
+   */
   function refreshAppId() {
     setChanges(true);
     toast.success(
@@ -100,6 +113,12 @@ function Settings() {
     setAppId(newAppId);
   }
 
+  /**
+   *
+   * SAVE THE CUSTOMIZATION TO DISK
+   * FOR FUTURE USAGE
+   *
+   */
   function saveSettings() {
     const settingsData: SettingsData = {
       colorMode,
@@ -112,7 +131,7 @@ function Settings() {
       .then(() => {
         toast.success("Saved Successfully");
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error("An Error Occurred");
       });
   }

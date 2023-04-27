@@ -1,6 +1,9 @@
-import { SyncFrequency } from "../../web/state/syncState";
+/**
+ *
+ * TYPE DEFINITIONS USED APP WIDE
+ *
+ */
 import { ColorMode } from "../../web/state";
-import { NativeImage } from "electron";
 
 export interface SettingsData {
   colorMode: ColorMode;
@@ -29,6 +32,6 @@ export interface DebugPrintArgs {
 }
 
 export interface ErrorDataArgs {
-  data: any;
+  error: any;
   description: string;
 }
