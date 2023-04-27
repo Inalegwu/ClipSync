@@ -17,7 +17,7 @@ import { FiCopy, FiHome, FiInfo, FiLock, FiRefreshCw } from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
-import { SettingsData } from "../../shared/utils/types";
+import type { SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
 import FrequencyPicker, {
   FrequencyPickerRef,

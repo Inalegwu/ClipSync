@@ -13,30 +13,53 @@ import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
 import { v4 } from "uuid";
+import db from "../shared/utils/db";
 
 export const App = () => {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
   const { changeSyncState } = useSyncState();
-  const { clipBoardData, setClipBoardData, deleteClipBoardItem } =
-    useClipBoard();
+  const { clipBoardData, setClipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  React.useMemo(() => {
-    invoke.readClipBoard().then((res) => {
-      setClipBoardData({ appId: appId!, data: res, id: v4() });
-    });
-  }, []);
+  React.useEffect(() => {
+    invoke
+      .readClipBoard()
+      .then((res) => {
+        db.put({ _id: new Date().toISOString(), appId: appId, data: res });
+      })
+      .then(() => {
+        db.allDocs({ include_docs: true, key: appId })
+          .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
+            res.rows.forEach((row) => {
+              setClipBoardData({
+                appId: row.doc?.appId,
+                data: row.doc?.data,
+                id: row.id,
+                _rev: row.value.rev,
+              });
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+  }, [inputRef.current?.value]);
 
   React.useMemo(() => {
-    invoke.readSettings().then((settings) => {
-      setColorMode(settings.colorMode);
-      changeSyncState(settings.syncState);
-      setPrimaryColor(settings.color);
-      setAppId(settings.appId!);
-    });
+    invoke
+      .readSettings()
+      .then((settings) => {
+        setColorMode(settings.colorMode);
+        changeSyncState(settings.syncState);
+        setPrimaryColor(settings.color);
+        setAppId(appId);
+      })
+      .catch((reason) => {
+        console.log(reason);
+      });
   }, []);
 
   function addToClipBoard(text: string) {
@@ -105,8 +128,8 @@ export const App = () => {
           overflowY: "scroll",
         }}
       >
-        {clipBoardData?.map((data) => {
-          return <ClipItem data={data} key={data.id} />;
+        {clipBoardData?.map((data, idx) => {
+          return <ClipItem data={data} key={idx} />;
           // return <Box key={idx}>{data.id}</Box>;
         })}
       </Box>

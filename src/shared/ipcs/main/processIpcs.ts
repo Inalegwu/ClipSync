@@ -1,6 +1,5 @@
 import { app, clipboard } from "electron";
 import { createIpcSlice } from "interprocess";
-import db from "../../utils/db";
 
 export const ProcessIpcs = createIpcSlice({
   main: {

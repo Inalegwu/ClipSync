@@ -1,4 +1,4 @@
-import { NativeImage } from "electron";
+import type { NativeImage } from "electron";
 import { Image } from "./styled";
 
 export interface ClipImageProps {

@@ -4,6 +4,7 @@ import path from "path";
 import { app } from "electron";
 import * as fs from "fs";
 import superjson from "superjson";
+import { useUserState } from "../../../web/state";
 
 export const ConfigIpcs = createIpcSlice({
   main: {

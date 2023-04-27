@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ClipBoardItem } from "../../shared/utils/types";
+import type { ClipBoardItem } from "../../shared/utils/types";
 
 export interface ClipBoardState {
   clipBoardData: Array<ClipBoardItem>;

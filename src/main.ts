@@ -1,7 +1,6 @@
 import path from "path";
 import { BrowserWindow, Tray, app, globalShortcut } from "electron";
 import { ipcMain } from "./shared/ipcs/ipcs";
-import db from "./shared/utils/db";
 
 const { handle, invoke } = ipcMain;
 
@@ -11,6 +10,8 @@ app.whenReady().then(() => {
     autoHideMenuBar: true,
     width: 400,
     height: 400,
+    resizable: false,
+    vibrancy: "under-window",
     icon: path.join(__dirname, "assets/images/AppIcon.ico"),
     webPreferences: {
       preload: path.resolve(__dirname, "preload.js"),
@@ -28,6 +29,8 @@ app.whenReady().then(() => {
   handle.readSettings();
   handle.saveSettings();
   handle.openLinkInBrowserWindow();
+  handle.debugPrint();
+  handle.sendErrorData();
 
   // new Tray(path.join(__dirname, "assets/images/AppIcon.ico"));
 

@@ -28,11 +28,17 @@ function ClipItem({ data }: ClipItemProps) {
 
   function deleteClip() {
     deleteClipBoardItem(data.id);
-    toast.success("Deleted", {
-      style: {
-        width: "200px",
-      },
-    });
+    db.remove({ _id: data.id, _rev: data._rev! })
+      .then(() => {
+        toast.success("Deleted", {
+          style: {
+            width: "200px",
+          },
+        });
+      })
+      .catch((err) => {
+        toast.error(err);
+      });
   }
 
   return (
@@ -40,7 +46,8 @@ function ClipItem({ data }: ClipItemProps) {
       css={{
         background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
         borderRadius: "5px",
-        marginTop: "$2",
+        marginTop: "$1",
+        marginBottom: "$2",
         padding: "$2",
         display: "flex",
         alignContent: "center",
