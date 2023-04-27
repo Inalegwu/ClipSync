@@ -28,12 +28,14 @@ export const App = () => {
     invoke
       .readClipBoard()
       .then((res) => {
+        //TODO work on type defintions here
         db.put({ _id: new Date().toISOString(), appId: appId, data: res });
       })
       .then(() => {
         db.allDocs({ include_docs: true, key: appId })
           .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
-            res.rows.forEach((row) => {
+            //TODO and here to
+            res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
               setClipBoardData({
                 appId: row.doc?.appId,
                 data: row.doc?.data,
