@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
+import dayjs from "dayjs";
 
 /**
  *
@@ -50,10 +51,8 @@ export const App = () => {
             });
           }
         })
-        .then(() => {
-          invoke.clearClipBoard();
-        });
-    }, 1000);
+        .then(() => {});
+    }, 5000);
     db.allDocs({ include_docs: true, key: appId })
       .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
         res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
