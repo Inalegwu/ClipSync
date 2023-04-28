@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useClipBoard, useColorModeValue, usePrimaryColor } from "../state";
 import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
-import type { ClipBoardItem } from "../../shared/utils/types";
+import type { ClipBoardItem, Row } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";

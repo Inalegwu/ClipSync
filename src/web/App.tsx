@@ -6,8 +6,8 @@ import {
   usePrimaryColor,
   useUserState,
 } from "./state";
-import { Box, Input, LinkButton, Paragraph } from "./component/styled";
-import { FiSettings, FiInfo } from "react-icons/fi";
+import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
+import { FiSettings, FiInfo, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
@@ -51,9 +51,11 @@ export const App = () => {
             });
           }
         })
-        .then(() => {});
+        .then(() => {
+          invoke.clearClipBoard();
+        });
     }, 5000);
-    db.allDocs({ include_docs: true, key: appId })
+    db.allDocs({ include_docs: true, key: appId, descending: true })
       .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
         res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
           setClipBoardData({
@@ -97,6 +99,22 @@ export const App = () => {
     invoke.appendToClipBoard(text);
   }
 
+  function scrollToBottom() {
+    viewRef.current?.scrollTo({ top: clipBoardData.length * 500 });
+  }
+
+  function scrollToTop() {
+    viewRef.current?.scrollTo({ top: -clipBoardData.length });
+  }
+
+  window.addEventListener("keydown", (ev) => {
+    if (ev.key === "PageUp") {
+      scrollToTop();
+    } else if (ev.key === "PageDown") {
+      scrollToBottom();
+    }
+  });
+
   return (
     <Box
       css={{
@@ -120,6 +138,36 @@ export const App = () => {
           justifyContent: "flex-end",
         }}
       >
+        <Button
+          onClick={scrollToTop}
+          css={{
+            width: "30px",
+            height: "30px",
+            "&:hover": {
+              background: `${primaryColor}`,
+              color: "white",
+            },
+            outlineColor: `${primaryColor}`,
+          }}
+          variant={colorMode === "Dark" ? "dark" : "light"}
+        >
+          <FiArrowUp size={14} />
+        </Button>
+        <Button
+          onClick={scrollToBottom}
+          css={{
+            width: "30px",
+            height: "30px",
+            "&:hover": {
+              background: `${primaryColor}`,
+              color: "white",
+            },
+            outlineColor: `${primaryColor}`,
+          }}
+          variant={colorMode === "Dark" ? "dark" : "light"}
+        >
+          <FiArrowDown size={14} />
+        </Button>
         <LinkButton
           to="/about"
           css={{

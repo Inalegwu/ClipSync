@@ -18,7 +18,7 @@ export interface ClipBoardItem {
   id: string;
   data: string;
   appId: string;
-  _rev?: string;
+  _rev: string;
 }
 
 export interface ClipStore {
@@ -36,4 +36,16 @@ export interface ErrorDataArgs {
   description: string;
 }
 
-export interface Row {}
+export interface Row {
+  id: string;
+  key: string;
+  value: {
+    rev: string;
+  };
+  doc: {
+    appId: string;
+    data: string;
+    _id: string;
+    _rev: string;
+  };
+}
