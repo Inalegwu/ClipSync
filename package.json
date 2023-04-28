@@ -24,6 +24,7 @@
   "dependencies": {
     "@stitches/react": "^1.2.8",
     "@types/uuid": "^9.0.1",
+    "dayjs": "^1.11.7",
     "interprocess": "^0.2.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

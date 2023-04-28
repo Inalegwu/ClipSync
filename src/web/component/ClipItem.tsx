@@ -6,10 +6,14 @@ import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
 import type { ClipBoardItem } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 /**
  * TODO add dayjs to the app
  */
+
+dayjs.extend(relativeTime);
 
 export interface ClipItemProps {
   data: ClipBoardItem;
@@ -29,6 +33,9 @@ function ClipItem({ data }: ClipItemProps) {
       },
     });
   }
+
+  const parsedDate = Date.parse(data.id);
+  const relativeDate = dayjs(parsedDate).fromNow(true);
 
   function deleteClip() {
     deleteClipBoardItem(data.id);
@@ -81,7 +88,7 @@ function ClipItem({ data }: ClipItemProps) {
             color: `${colorMode === "Dark" ? "$whiteMuted" : "$blackMuted"}`,
           }}
         >
-          {data.id}
+          {relativeDate} ago
         </Paragraph>
       </Box>
       {/* actions */}

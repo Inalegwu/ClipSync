@@ -38,32 +38,39 @@ export const App = () => {
    *
    */
   React.useEffect(() => {
-    invoke
-      .readClipBoard()
-      .then((res) => {
-        if (res !== "") {
-          db.put({ _id: new Date().toISOString(), appId: appId, data: res });
-        }
-      })
-      .then(() => {
-        db.allDocs({ include_docs: true, key: appId })
-          .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
-            res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
-              setClipBoardData({
-                appId: row.doc?.appId,
-                data: row.doc?.data,
-                id: row.id,
-                _rev: row.value.rev,
-              });
+    const interval = setInterval(() => {
+      invoke
+        .readClipBoard()
+        .then((res) => {
+          if (res !== "") {
+            db.put({
+              _id: new Date().toISOString(),
+              appId: appId,
+              data: res,
             });
-          })
-          .catch((err) => {
-            console.log(err);
+          }
+        })
+        .then(() => {
+          invoke.clearClipBoard();
+        });
+    }, 1000);
+    db.allDocs({ include_docs: true, key: appId })
+      .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
+        res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
+          setClipBoardData({
+            appId: row.doc?.appId,
+            data: row.doc?.data,
+            id: row.id,
+            _rev: row.value.rev,
           });
+        });
       })
-      .finally(() => {
-        invoke.clearClipBoard();
+      .catch((err) => {
+        console.log(err);
       });
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   /**
