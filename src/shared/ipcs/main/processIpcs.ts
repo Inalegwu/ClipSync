@@ -17,5 +17,8 @@ export const ProcessIpcs = createIpcSlice({
     async appendToClipBoard(_, text: string) {
       clipboard.writeText(text, "clipboard");
     },
+    async clearClipBoard() {
+      clipboard.clear();
+    },
   },
 });

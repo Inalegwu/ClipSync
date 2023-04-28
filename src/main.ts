@@ -36,7 +36,7 @@ app.whenReady().then(() => {
   handle.openLinkInBrowserWindow();
   handle.debugPrint();
   handle.sendErrorData();
-
+  handle.clearClipBoard();
   // new Tray(path.join(__dirname, "assets/images/AppIcon.ico"));
 
   globalShortcut.register("Shift+Space", () => {

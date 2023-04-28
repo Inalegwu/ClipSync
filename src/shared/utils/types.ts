@@ -35,3 +35,5 @@ export interface ErrorDataArgs {
   error: any;
   description: string;
 }
+
+export interface Row {}

@@ -7,6 +7,10 @@ import useWindowApi from "../hooks/useWindowApi";
 import type { ClipBoardItem } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
 
+/**
+ * TODO add dayjs to the app
+ */
+
 export interface ClipItemProps {
   data: ClipBoardItem;
 }
@@ -56,11 +60,17 @@ function ClipItem({ data }: ClipItemProps) {
       }}
     >
       {/* data and clipboard data */}
-      <Box css={{ display: "flex", flexDirection: "column", gap: "$1" }}>
+      <Box
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "$1",
+        }}
+      >
         <Paragraph
           css={{
             color: `${colorMode === "Dark" ? "white" : "black"}`,
-            fontSize: "13px",
+            fontSize: "12px",
           }}
         >
           {data.data}

@@ -11,6 +11,6 @@ import PouchDB from "pouchdb";
 
 const db = new PouchDB("clipboards", {});
 
-const remoteDb = "http://localhost:5986/clipboards";
+const remoteDb = "http://localhost:5984/clipboards";
 
 export default db;

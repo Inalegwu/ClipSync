@@ -6,7 +6,7 @@ import {
   usePrimaryColor,
   useUserState,
 } from "./state";
-import { Box, Input, LinkButton } from "./component/styled";
+import { Box, Input, LinkButton, Paragraph } from "./component/styled";
 import { FiSettings, FiInfo } from "react-icons/fi";
 import { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
@@ -41,15 +41,13 @@ export const App = () => {
     invoke
       .readClipBoard()
       .then((res) => {
-        //TODO work on type defintions here
-        db.put({ _id: new Date().toISOString(), appId: appId, data: res });
+        if (res !== "") {
+          db.put({ _id: new Date().toISOString(), appId: appId, data: res });
+        }
       })
       .then(() => {
         db.allDocs({ include_docs: true, key: appId })
           .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
-            // TODO work on the type defintion here
-            // this shit is going to hard to figure out
-            // but I'll find a way
             res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
               setClipBoardData({
                 appId: row.doc?.appId,
@@ -62,6 +60,9 @@ export const App = () => {
           .catch((err) => {
             console.log(err);
           });
+      })
+      .finally(() => {
+        invoke.clearClipBoard();
       });
   }, []);
 
@@ -153,10 +154,11 @@ export const App = () => {
           overflowY: "scroll",
         }}
       >
-        {clipBoardData?.map((data, idx) => {
-          return <ClipItem data={data} key={idx} />;
-          // return <Box key={idx}>{data.id}</Box>;
-        })}
+        {clipBoardData &&
+          clipBoardData.map((data, idx) => {
+            return <ClipItem data={data} key={idx} />;
+            // return <Box key={idx}>{data.id}</Box>;
+          })}
       </Box>
       <Input
         ref={inputRef}
