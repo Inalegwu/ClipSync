@@ -34,7 +34,7 @@ function ClipItem({ data }: ClipItemProps) {
     });
   }
 
-  const parsedDate = Date.parse(data.id);
+  const parsedDate = Date.parse(data.dateCreated);
   const relativeDate = dayjs(parsedDate).fromNow(true);
 
   function deleteClip() {
@@ -58,7 +58,7 @@ function ClipItem({ data }: ClipItemProps) {
         background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
         borderRadius: "5px",
         marginTop: "$1",
-        marginBottom: "$2",
+        marginBottom: "$1",
         padding: "$2",
         display: "flex",
         alignContent: "center",
@@ -72,9 +72,11 @@ function ClipItem({ data }: ClipItemProps) {
           display: "flex",
           flexDirection: "column",
           gap: "$1",
+          cursor: "pointer",
         }}
       >
         <Paragraph
+          onClick={copy}
           css={{
             color: `${colorMode === "Dark" ? "white" : "black"}`,
             fontSize: "12px",

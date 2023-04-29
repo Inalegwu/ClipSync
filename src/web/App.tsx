@@ -20,6 +20,7 @@ import dayjs from "dayjs";
  *
  */
 import db from "../shared/utils/db";
+import { v4 } from "uuid";
 
 export const App = () => {
   const { invoke } = useWindowApi();
@@ -38,24 +39,27 @@ export const App = () => {
    * THE SAME DATABASE IN THE SAME PASS
    *
    */
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      invoke
-        .readClipBoard()
-        .then((res) => {
-          if (res !== "") {
-            db.put({
-              _id: new Date().toISOString(),
-              appId: appId,
-              data: res,
-            });
-          }
-        })
-        .then(() => {
-          invoke.clearClipBoard();
-        });
-    }, 5000);
-    db.allDocs({ include_docs: true, key: appId, descending: true })
+
+  function readFromClipboard() {
+    invoke
+      .readClipBoard()
+      .then((res) => {
+        if (res !== "") {
+          db.put({
+            _id: v4(),
+            appId: appId,
+            data: res,
+            dateCreated: new Date().toISOString(),
+          });
+        }
+      })
+      .catch((reason) => {
+        invoke.sendErrorData({ error: reason, description: "Failed to put" });
+      });
+  }
+
+  function readDb() {
+    db.allDocs({ include_docs: true, key: appId, descending: false })
       .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
         res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
           setClipBoardData({
@@ -63,14 +67,28 @@ export const App = () => {
             data: row.doc?.data,
             id: row.id,
             _rev: row.value.rev,
+            dateCreated: row.doc?.dateCreated,
           });
         });
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      readFromClipboard();
+    }, 4000);
+    const clearClipBoardInterval = setInterval(() => {
+      invoke.clearClipBoard();
+    }, 5000);
+
+    readDb();
+
     return () => {
       clearInterval(interval);
+      clearInterval(clearClipBoardInterval);
     };
   }, []);
 
@@ -135,54 +153,48 @@ export const App = () => {
           display: "flex",
           alignContent: "center",
           gap: "10px",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
         }}
       >
-        <Button
-          onClick={scrollToTop}
+        <Box
           css={{
-            width: "30px",
-            height: "30px",
-            "&:hover": {
-              background: `${primaryColor}`,
-              color: "white",
-            },
-            outlineColor: `${primaryColor}`,
+            display: "flex",
+            gap: "$2",
+            alignContent: "center",
+            alignItems: "center",
           }}
-          variant={colorMode === "Dark" ? "dark" : "light"}
         >
-          <FiArrowUp size={14} />
-        </Button>
-        <Button
-          onClick={scrollToBottom}
-          css={{
-            width: "30px",
-            height: "30px",
-            "&:hover": {
-              background: `${primaryColor}`,
-              color: "white",
-            },
-            outlineColor: `${primaryColor}`,
-          }}
-          variant={colorMode === "Dark" ? "dark" : "light"}
-        >
-          <FiArrowDown size={14} />
-        </Button>
-        <LinkButton
-          to="/about"
-          css={{
-            width: "30px",
-            height: "30px",
-            "&:hover": {
-              background: `${primaryColor}`,
-              color: "white",
-            },
-            outlineColor: `${primaryColor}`,
-          }}
-          variant={colorMode === "Dark" ? "dark" : "light"}
-        >
-          <FiInfo size={14} />
-        </LinkButton>
+          <Button
+            onClick={scrollToTop}
+            css={{
+              width: "30px",
+              height: "30px",
+              "&:hover": {
+                background: `${primaryColor}`,
+                color: "white",
+              },
+              outlineColor: `${primaryColor}`,
+            }}
+            variant={colorMode === "Dark" ? "dark" : "light"}
+          >
+            <FiArrowUp size={14} />
+          </Button>
+          <Button
+            onClick={scrollToBottom}
+            css={{
+              width: "30px",
+              height: "30px",
+              "&:hover": {
+                background: `${primaryColor}`,
+                color: "white",
+              },
+              outlineColor: `${primaryColor}`,
+            }}
+            variant={colorMode === "Dark" ? "dark" : "light"}
+          >
+            <FiArrowDown size={14} />
+          </Button>
+        </Box>
         <LinkButton
           to="/settings"
           css={{

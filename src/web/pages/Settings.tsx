@@ -153,7 +153,7 @@ function Settings() {
           width: "100%",
           display: "flex",
           gap: "10px",
-          justifyContent: "flex-start",
+          justifyContent: "space-between",
           alignContent: "center",
           alignItems: "center",
         }}
@@ -170,6 +170,19 @@ function Settings() {
           variant={colorMode === "Dark" ? "dark" : "light"}
         >
           <FiHome size={13} />
+        </LinkButton>
+        <LinkButton
+          css={{
+            outlineColor: `${primaryColor}`,
+            "&:hover": {
+              background: `${primaryColor}`,
+              color: "white",
+            },
+          }}
+          to="/about"
+          variant={colorMode === "Dark" ? "dark" : "light"}
+        >
+          <FiInfo size={14} />
         </LinkButton>
       </Box>
       <Box

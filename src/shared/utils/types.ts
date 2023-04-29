@@ -19,6 +19,7 @@ export interface ClipBoardItem {
   data: string;
   appId: string;
   _rev: string;
+  dateCreated: string;
 }
 
 export interface ClipStore {
