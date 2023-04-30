@@ -1,5 +1,6 @@
 import { app, clipboard } from "electron";
 import { createIpcSlice } from "interprocess";
+import { ClipBoardImage, ClipBoardText } from "../../utils/types";
 
 /**
  *
@@ -10,7 +11,7 @@ import { createIpcSlice } from "interprocess";
  */
 export const ProcessIpcs = createIpcSlice({
   main: {
-    async readClipBoard() {
+    async readClipBoardText() {
       const clipBoardData = clipboard.readText();
       return clipBoardData;
     },
@@ -19,6 +20,11 @@ export const ProcessIpcs = createIpcSlice({
     },
     async clearClipBoard() {
       clipboard.clear();
+    },
+    async readClipBoardImage() {
+      const clipBoardData = clipboard.readImage("clipboard");
+      // console.log(clipBoardData);
+      return clipBoardData;
     },
   },
 });

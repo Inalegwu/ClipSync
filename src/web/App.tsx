@@ -7,12 +7,17 @@ import {
   useUserState,
 } from "./state";
 import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
-import { FiSettings, FiInfo, FiArrowDown, FiArrowUp } from "react-icons/fi";
-import { Toaster } from "react-hot-toast";
+import {
+  FiSettings,
+  FiInfo,
+  FiArrowDown,
+  FiArrowUp,
+  FiTrash,
+} from "react-icons/fi";
+import toast, { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
-import dayjs from "dayjs";
 
 /**
  *
@@ -20,13 +25,12 @@ import dayjs from "dayjs";
  *
  */
 import db from "../shared/utils/db";
-import { v4 } from "uuid";
 
 export const App = () => {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
-  const { changeSyncState } = useSyncState();
+  const { canSync, syncUrl, setSyncUrl, changeSyncState } = useSyncState();
   const { clipBoardData, setClipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -39,14 +43,13 @@ export const App = () => {
    * THE SAME DATABASE IN THE SAME PASS
    *
    */
-
   function readFromClipboard() {
     invoke
-      .readClipBoard()
+      .readClipBoardText()
       .then((res) => {
         if (res !== "") {
           db.put({
-            _id: v4(),
+            _id: new Date().toISOString(),
             appId: appId,
             data: res,
             dateCreated: new Date().toISOString(),
@@ -59,7 +62,7 @@ export const App = () => {
   }
 
   function readDb() {
-    db.allDocs({ include_docs: true, key: appId, descending: false })
+    db.allDocs({ include_docs: true, key: appId, descending: true })
       .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
         res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
           setClipBoardData({
@@ -72,19 +75,51 @@ export const App = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        invoke.sendErrorData({ error: err, description: "Read DB Error" });
       });
   }
+
+  const readUserPreferences = React.useCallback(() => {
+    invoke
+      .readSettings()
+      .then((settings) => {
+        setColorMode(settings.colorMode);
+        changeSyncState(settings.canSync);
+        setPrimaryColor(settings.color);
+        setAppId(settings.appId!);
+        setSyncUrl(settings.syncUrl);
+      })
+      .catch((reason) => {
+        console.log(reason);
+      });
+  }, [colorMode, canSync, primaryColor, appId, syncUrl]);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
       readFromClipboard();
-    }, 4000);
+    }, 2000);
+
     const clearClipBoardInterval = setInterval(() => {
       invoke.clearClipBoard();
     }, 5000);
 
+    // run once the app is mounted
     readDb();
+
+    /**
+     *
+     * begin the syncing
+     *
+     */
+    if (canSync === true) {
+      db.sync(syncUrl, {
+        live: true,
+        retry: true,
+        timeout: 10000,
+      }).on("complete", () => {
+        toast.success("Syncing Complete");
+      });
+    }
 
     return () => {
       clearInterval(interval);
@@ -92,26 +127,15 @@ export const App = () => {
     };
   }, []);
 
-  /**
+  React.useMemo(() => {
+    readUserPreferences();
+  }, []);
+
+  /***
    *
-   * THIS SECTION READS IN THE USERS PREFERENCES
-   * FROM STORAGE AND SETS THAT APP STATE APPROPRIATELY
-   * IF THERE IS NO STATE,THE DEFAULT STATES ARE USED
+   * refactor this block to add to the database as well as append to the clipboard
    *
    */
-  React.useMemo(() => {
-    invoke
-      .readSettings()
-      .then((settings) => {
-        setColorMode(settings.colorMode);
-        changeSyncState(settings.syncState);
-        setPrimaryColor(settings.color);
-        setAppId(appId);
-      })
-      .catch((reason) => {
-        console.log(reason);
-      });
-  }, []);
 
   function addToClipBoard(text: string) {
     invoke.appendToClipBoard(text);
@@ -240,7 +264,7 @@ export const App = () => {
           height: "10%",
           width: "100%",
           border: "0.1px solid #3838383c",
-          outline: "none",
+          outlineColor: "none",
         }}
         variant={colorMode === "Dark" ? "dark" : "light"}
       />
@@ -251,7 +275,7 @@ export const App = () => {
           duration: 700,
           style: {
             padding: "5px",
-            width: "50px",
+            width: "200px",
             fontSize: "14px",
             background: `${colorMode === "Dark" ? "black" : "white"}`,
             color: `${colorMode === "Dark" ? "white" : "black"}`,

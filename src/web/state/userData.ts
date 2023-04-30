@@ -1,14 +1,13 @@
-import { v4 } from "uuid";
 import { create } from "zustand";
 
 export interface UserState {
-  appId: string;
+  appId: string | undefined;
   setEmail: (email: string) => void;
   setAppId: (id: string) => void;
 }
 
 export const useUserState = create<UserState>((set) => ({
-  appId: "",
+  appId: undefined,
   setEmail: (email: string) => () => ({ email: email }),
-  setAppId: (id) => set(() => ({ appId: id })),
+  setAppId: (id: string) => set(() => ({ appId: id })),
 }));

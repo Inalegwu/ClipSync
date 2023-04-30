@@ -3,16 +3,27 @@
  * TYPE DEFINITIONS USED APP WIDE
  *
  */
+import { NativeImage } from "electron";
 import { ColorMode } from "../../web/state";
 
 export interface SettingsData {
   colorMode: ColorMode;
-  syncState: boolean;
+  canSync: boolean;
   color: string;
-  appId: string | null;
+  appId: string | undefined;
+  syncUrl: string;
 }
 
 export type ClipItemType = "IMAGE" | "HTML" | "TEXT";
+
+export interface ClipBoardImage {
+  data: Buffer;
+  dataUrl: Buffer;
+}
+
+export interface ClipBoardText {
+  data: string;
+}
 
 export interface ClipBoardItem {
   id: string;

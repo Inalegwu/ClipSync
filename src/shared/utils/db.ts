@@ -11,6 +11,14 @@ import PouchDB from "pouchdb";
 
 const db = new PouchDB("clipboards", {});
 
-const remoteDb = "http://localhost:5984/clipboards";
+/***
+ *
+ *
+ * make the remote sync db location a config option so that
+ * syncing can be done in the renderer process and in that way,
+ * the user can manage whether they are syncing or not
+ *
+ *
+ */
 
 export default db;

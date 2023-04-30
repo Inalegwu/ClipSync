@@ -1,17 +1,18 @@
 import React from "react";
 import { Box, Button, Paragraph } from "./styled";
 import toast from "react-hot-toast";
-import { useClipBoard, useColorModeValue, usePrimaryColor } from "../state";
+import {
+  useClipBoard,
+  useColorModeValue,
+  usePrimaryColor,
+  useSyncState,
+} from "../state";
 import { FiCopy, FiDelete } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
 import type { ClipBoardItem, Row } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
-/**
- * TODO add dayjs to the app
- */
 
 dayjs.extend(relativeTime);
 
@@ -73,6 +74,8 @@ function ClipItem({ data }: ClipItemProps) {
           flexDirection: "column",
           gap: "$1",
           cursor: "pointer",
+          width: "80%",
+          wordWrap: "break-word",
         }}
       >
         <Paragraph

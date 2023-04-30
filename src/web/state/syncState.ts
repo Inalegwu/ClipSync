@@ -7,11 +7,15 @@ export type SyncFrequency =
   | "EVERY OTHER DAY";
 
 export interface SyncStateProps {
-  syncState: boolean;
+  canSync: boolean;
+  syncUrl: string;
   changeSyncState: (state: boolean) => void;
+  setSyncUrl: (url: string) => void;
 }
 
 export const useSyncState = create<SyncStateProps>((set) => ({
-  syncState: true,
-  changeSyncState: (state) => set(() => ({ syncState: state })),
+  canSync: true,
+  syncUrl: "http://admin:admin@localhost:5984/clipboards",
+  changeSyncState: (state) => set(() => ({ canSync: state })),
+  setSyncUrl: (url: string) => set(() => ({ syncUrl: url })),
 }));

@@ -208,6 +208,39 @@ function About() {
               }`,
             }}
           >
+            Cloud Backups
+          </Title>
+          <Paragraph
+            css={{
+              fontSize: "12px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
+            ☁️Save your clipboard data to the cloud so you can always have them.
+            And if you want to leave ClipSync behind , you can always export
+            them and use them somewhere else
+          </Paragraph>
+        </Box>
+        <Box
+          css={{
+            background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
+            display: "flex",
+            flexDirection: "column",
+            padding: "$2",
+            borderRadius: "5px",
+            gap: "5px",
+          }}
+        >
+          <Title
+            css={{
+              fontSize: "15px",
+              color: `${
+                colorMode === "Dark" ? "$background" : "$backgroundDark"
+              }`,
+            }}
+          >
             How About Images
           </Title>
           <Paragraph
@@ -242,6 +275,10 @@ function About() {
               color: `${primaryColor}`,
               cursor: "pointer",
               outlineColor: `${primaryColor}`,
+              "&:hover": {
+                background: `${primaryColor}`,
+                color: "white",
+              },
             }}
             onClick={() => {
               invoke.openLinkInBrowserWindow("https://twitter.com/diff_dev");
@@ -258,6 +295,10 @@ function About() {
               color: `${primaryColor}`,
               cursor: "pointer",
               outlineColor: `${primaryColor}`,
+              "&:hover": {
+                background: `${primaryColor}`,
+                color: "white",
+              },
             }}
             onClick={() => {
               invoke.openLinkInBrowserWindow("https://github.com/Inalegwu");
@@ -274,6 +315,10 @@ function About() {
               color: `${primaryColor}`,
               cursor: "pointer",
               outlineColor: `${primaryColor}`,
+              "&:hover": {
+                background: `${primaryColor}`,
+                color: "white",
+              },
             }}
             onClick={() => {
               invoke.openLinkInBrowserWindow(

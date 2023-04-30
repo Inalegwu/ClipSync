@@ -8,25 +8,36 @@ import {
   Title,
 } from "../component/styled";
 import {
+  useClipBoard,
   useColorModeValue,
   usePrimaryColor,
   useSyncState,
   useUserState,
 } from "../state";
-import { FiCopy, FiHome, FiInfo, FiLock, FiRefreshCw } from "react-icons/fi";
+import {
+  FiCopy,
+  FiDelete,
+  FiHome,
+  FiInfo,
+  FiLock,
+  FiRefreshCw,
+  FiTrash,
+} from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
 import type { SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
 import generateAppId from "../../shared/utils/generateAppId";
+import superjson from "superjson";
 
 function Settings() {
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
-  const { syncState, changeSyncState } = useSyncState();
+  const { canSync, changeSyncState, syncUrl } = useSyncState();
   const { appId, setAppId } = useUserState();
   const { invoke } = useWindowApi();
+  const { clipBoardData } = useClipBoard();
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
   const [changes, setChanges] = React.useState<boolean>(false);
@@ -41,7 +52,7 @@ function Settings() {
     } else {
       themeSwitchRef.current?.setActive(false);
     }
-    if (syncState === true) {
+    if (canSync === true) {
       syncSwitchRef.current?.setActive(true);
     } else {
       syncSwitchRef.current?.setActive(false);
@@ -122,9 +133,10 @@ function Settings() {
   function saveSettings() {
     const settingsData: SettingsData = {
       colorMode,
-      syncState: syncSwitchRef.current?.active()!,
+      canSync: syncSwitchRef.current?.active()!,
       color: primaryColor,
-      appId: appId,
+      appId: appId!,
+      syncUrl: syncUrl,
     };
     invoke
       .saveSettings(settingsData)
@@ -149,9 +161,9 @@ function Settings() {
     >
       <Box
         css={{
-          height: "10%",
           width: "100%",
           display: "flex",
+          height: "10%",
           gap: "10px",
           justifyContent: "space-between",
           alignContent: "center",
@@ -189,9 +201,11 @@ function Settings() {
         css={{
           height: "90%",
           width: "100%",
+          overflowX: "scroll",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          flexGrow: 1,
         }}
       >
         <Box>
@@ -237,6 +251,7 @@ function Settings() {
                   colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
                 }`,
                 outlineColor: `${primaryColor}`,
+                border: "none",
               }}
               type="color"
             />
@@ -244,7 +259,7 @@ function Settings() {
           <Title
             css={{
               fontSize: "14px",
-              marginTop: "$3",
+              marginTop: "$2",
               color: `${colorMode === "Dark" ? "white" : "$backgroundDark"}`,
             }}
           >

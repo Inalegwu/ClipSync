@@ -1,10 +1,10 @@
 import { styled } from "../../stitches.config";
 
 export const Input = styled("input", {
-  border: "none",
-  outlineColor: "$primary",
+  outline: "none",
   borderRadius: "5px",
-  padding: "10px",
+  padding: "15px",
+  border: "0.1px solid #3838383c",
 
   variants: {
     variant: {
