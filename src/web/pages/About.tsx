@@ -1,7 +1,13 @@
 import React from "react";
 import { Box, Button, LinkButton, Paragraph, Title } from "../component/styled";
 import { useColorModeValue, usePrimaryColor } from "../state";
-import { FiGithub, FiGlobe, FiHome, FiTwitter } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiGithub,
+  FiGlobe,
+  FiHome,
+  FiTwitter,
+} from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
 
 /**
@@ -32,8 +38,22 @@ function About() {
           alignItems: "center",
           justifyContent: "flex-start",
           height: "10%",
+          gap: "$2",
         }}
       >
+        <LinkButton
+          css={{
+            outlineColor: `${primaryColor}`,
+            "&:hover": {
+              background: `${primaryColor}`,
+              color: "white",
+            },
+          }}
+          variant={colorMode === "Dark" ? "dark" : "light"}
+          to="/settings"
+        >
+          <FiArrowLeft size={14} />
+        </LinkButton>
         <LinkButton
           css={{
             outlineColor: `${primaryColor}`,

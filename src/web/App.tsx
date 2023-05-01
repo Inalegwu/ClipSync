@@ -7,13 +7,7 @@ import {
   useUserState,
 } from "./state";
 import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
-import {
-  FiSettings,
-  FiInfo,
-  FiArrowDown,
-  FiArrowUp,
-  FiTrash,
-} from "react-icons/fi";
+import { FiSettings, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
 import ClipItem from "./component/ClipItem";
 import "./index.css";
@@ -48,9 +42,10 @@ export const App = () => {
       .readClipBoardText()
       .then((res) => {
         if (res !== "") {
+          invoke.debugPrint({ data: appId, description: "Found Your App ID" });
           db.put({
             _id: new Date().toISOString(),
-            appId: appId,
+            appId: appId!,
             data: res,
             dateCreated: new Date().toISOString(),
           });

@@ -83,6 +83,9 @@ function ClipItem({ data }: ClipItemProps) {
           css={{
             color: `${colorMode === "Dark" ? "white" : "black"}`,
             fontSize: "12px",
+            "&:hover": {
+              color: `${colorMode === "Dark" ? "$whiteMuted" : "$blackMuted"}`,
+            },
           }}
         >
           {data.data}
