@@ -19,6 +19,7 @@ import { useSyncState } from "./state/syncState";
  *
  */
 import db from "../shared/utils/db";
+import { ErrorCode } from "../shared/utils/types";
 
 export const App = () => {
   const { invoke } = useWindowApi();
@@ -52,7 +53,11 @@ export const App = () => {
         }
       })
       .catch((reason) => {
-        invoke.sendErrorData({ error: reason, description: "Failed to put" });
+        invoke.sendErrorData({
+          error: reason,
+          description: "Failed write clipboard content to database",
+          error_code: ErrorCode.DATABASE_WRITE_ERROR,
+        });
       });
   }
 
@@ -70,7 +75,11 @@ export const App = () => {
         });
       })
       .catch((err) => {
-        invoke.sendErrorData({ error: err, description: "Read DB Error" });
+        invoke.sendErrorData({
+          error: err,
+          description: "Failed to read clipboards from database",
+          error_code: ErrorCode.DATABASE_READ_ERROR,
+        });
       });
   }
 
@@ -85,7 +94,11 @@ export const App = () => {
         setSyncUrl(settings.syncUrl);
       })
       .catch((reason) => {
-        console.log(reason);
+        invoke.sendErrorData({
+          error: reason,
+          description: "Failed to read Settings",
+          error_code: ErrorCode.FILE_READ_ERROR,
+        });
       });
   }, [colorMode, canSync, primaryColor, appId, syncUrl]);
 
@@ -111,8 +124,12 @@ export const App = () => {
         live: true,
         retry: true,
         timeout: 10000,
-      }).on("complete", () => {
-        toast.success("Syncing Complete");
+      }).catch((err) => {
+        invoke.sendErrorData({
+          error: err,
+          description: "Syncing Failed",
+          error_code: ErrorCode.DATABASE_SYNC_ERROR,
+        });
       });
     }
 

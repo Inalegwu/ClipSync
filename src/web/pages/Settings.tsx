@@ -26,7 +26,7 @@ import {
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
-import type { SettingsData } from "../../shared/utils/types";
+import { ErrorCode, SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
 import generateAppId from "../../shared/utils/generateAppId";
 import superjson from "superjson";
@@ -37,7 +37,6 @@ function Settings() {
   const { canSync, changeSyncState, syncUrl } = useSyncState();
   const { appId, setAppId } = useUserState();
   const { invoke } = useWindowApi();
-  const { clipBoardData } = useClipBoard();
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
   const [changes, setChanges] = React.useState<boolean>(false);
@@ -105,8 +104,19 @@ function Settings() {
   }
 
   function copyAppId() {
-    invoke.appendToClipBoard(appId!);
-    toast.success("Copied");
+    invoke
+      .appendToClipBoard(appId!)
+      .then(() => {
+        toast.success("Copied");
+      })
+      .catch((err) => {
+        toast.error("Something Wen't Wrong");
+        invoke.sendErrorData({
+          error: err,
+          description: "Failed to append to clipboard",
+          error_code: ErrorCode.CLIPBOARD_WRITE_ERROR,
+        });
+      });
   }
 
   /**
@@ -143,7 +153,12 @@ function Settings() {
       .then(() => {
         toast.success("Saved Successfully");
       })
-      .catch(() => {
+      .catch((err) => {
+        invoke.sendErrorData({
+          error: err,
+          description: "Failed To Save Settings",
+          error_code: ErrorCode.FILE_WRITE_ERROR,
+        });
         toast.error("An Error Occurred");
       });
   }

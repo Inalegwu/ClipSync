@@ -10,18 +10,23 @@ import superjson from "superjson";
  * IPC'S RELATED TO DEBUGGING AND ERROR DATA
  * MIGHT REMOVE.
  *
+ * LATER : only remove debug print function
+ * send error data will be used for error reporting in test builds
+ * release build will send usage data optionally
+ *
+ *
  * */
 export const DebugIpcs = createIpcSlice({
   main: {
     async debugPrint(_, { data, description }: DebugPrintArgs) {
-      console.log("Data : ", data, "Description : ", description);
+      console.log(`DEBUG::DATA:${data}::DESCRIPTION:${description}`);
     },
-    async sendErrorData(_, { error, description }: ErrorDataArgs) {
+    async sendErrorData(_, { error, description, error_code }: ErrorDataArgs) {
       const logsPath = path.join(
         app.getPath("appData"),
-        "serpent/logs/logs.txt"
+        "serpent/logs/logs.json"
       );
-      const logString = superjson.stringify({ error, description });
+      const logString = superjson.stringify({ error, description, error_code });
       fs.writeFileSync(logsPath, logString, { encoding: "binary" });
 
       /**
@@ -31,7 +36,9 @@ export const DebugIpcs = createIpcSlice({
        *
        */
 
-      console.log(error, description);
+      console.log(
+        `ERROR:${error}::DESCRIPTION:${description}::ERROR CODE :${error_code}`
+      );
     },
   },
 });

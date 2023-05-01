@@ -6,6 +6,19 @@
 import { NativeImage } from "electron";
 import { ColorMode } from "../../web/state";
 
+// ERROR CODE FOR USE WHEN READING ERROR LOGS IN THE
+// MY ERROR LOG INTERFACE
+export enum ErrorCode {
+  DATABASE_READ_ERROR = "DB_100",
+  DATABASE_WRITE_ERROR = "DB_102",
+  DATABASE_SYNC_ERROR = "DB_104",
+  CLIPBOARD_READ_ERROR = "CLP_200",
+  CLIPBOARD_WRITE_ERROR = "CLP_210",
+  FILE_READ_ERROR = "FLI_300",
+  FILE_WRITE_ERROR = "FLI_304",
+  UNEXPECTED_ERROR = "UEX_700",
+}
+
 export interface SettingsData {
   colorMode: ColorMode;
   canSync: boolean;
@@ -46,6 +59,7 @@ export interface DebugPrintArgs {
 export interface ErrorDataArgs {
   error: any;
   description: string;
+  error_code: ErrorCode;
 }
 
 export interface Row {
