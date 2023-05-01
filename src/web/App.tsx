@@ -19,7 +19,8 @@ import { useSyncState } from "./state/syncState";
  *
  */
 import db from "../shared/utils/db";
-import { ErrorCode } from "../shared/utils/types";
+import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
+import { nativeImage } from "electron";
 
 export const App = () => {
   const { invoke } = useWindowApi();
@@ -40,7 +41,7 @@ export const App = () => {
    */
   function readFromClipboard() {
     invoke
-      .readClipBoardText()
+      .readClipBoard()
       .then((res) => {
         if (res !== "") {
           invoke.debugPrint({ data: appId, description: "Found Your App ID" });
@@ -63,16 +64,8 @@ export const App = () => {
 
   function readDb() {
     db.allDocs({ include_docs: true, key: appId, descending: true })
-      .then((res: PouchDB.Core.AllDocsResponse<{}>) => {
-        res.rows.forEach((row: PouchDB.Core.ExistingDocument<any>) => {
-          setClipBoardData({
-            appId: row.doc?.appId,
-            data: row.doc?.data,
-            id: row.id,
-            _rev: row.value.rev,
-            dateCreated: row.doc?.dateCreated,
-          });
-        });
+      .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
+        setClipBoardData(res.rows);
       })
       .catch((err) => {
         invoke.sendErrorData({
@@ -114,6 +107,10 @@ export const App = () => {
     // run once the app is mounted
     readDb();
 
+    const readDbInterval = setInterval(() => {
+      readDb();
+    }, 1000);
+
     /**
      *
      * begin the syncing
@@ -136,6 +133,7 @@ export const App = () => {
     return () => {
       clearInterval(interval);
       clearInterval(clearClipBoardInterval);
+      clearInterval(readDbInterval);
     };
   }, []);
 
@@ -258,6 +256,8 @@ export const App = () => {
       >
         {clipBoardData &&
           clipBoardData.map((data, idx) => {
+            // i should probably find a way to fix this ts ignore
+            // @ts-ignore
             return <ClipItem data={data} key={idx} />;
             // return <Box key={idx}>{data.id}</Box>;
           })}

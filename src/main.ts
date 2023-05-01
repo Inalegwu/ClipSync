@@ -29,8 +29,7 @@ app.whenReady().then(() => {
   mainWindow.loadFile("dist/index.html");
   mainWindow.hide();
 
-  handle.readClipBoardText();
-  handle.readClipBoardImage();
+  handle.readClipBoard();
   handle.appendToClipBoard();
   handle.readSettings();
   handle.saveSettings();

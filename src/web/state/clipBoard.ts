@@ -1,18 +1,15 @@
 import { create } from "zustand";
 import type { ClipBoardItem, Row } from "../../shared/utils/types";
 
+//TODO define type defintions for clipboard data from the res.rows in App.tsx
+// else there is no more typesaftey
+
 export interface ClipBoardState {
   clipBoardData: Array<ClipBoardItem>;
-  setClipBoardData: (value: ClipBoardItem) => void;
-  deleteClipBoardItem: (id: string) => void;
+  setClipBoardData: (value: Array<any>) => void;
 }
 
 export const useClipBoard = create<ClipBoardState>((set) => ({
   clipBoardData: [],
-  setClipBoardData: (value) =>
-    set((state) => ({ clipBoardData: [...state.clipBoardData, value] })),
-  deleteClipBoardItem: (id: string) =>
-    set((state) => ({
-      clipBoardData: state.clipBoardData.filter((value) => value.id !== id),
-    })),
+  setClipBoardData: (value) => set(() => ({ clipBoardData: value })),
 }));

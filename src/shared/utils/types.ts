@@ -29,13 +29,9 @@ export interface SettingsData {
 
 export type ClipItemType = "IMAGE" | "HTML" | "TEXT";
 
-export interface ClipBoardImage {
-  data: Buffer;
-  dataUrl: Buffer;
-}
-
-export interface ClipBoardText {
-  data: string;
+export interface ClipBoardData {
+  data: string | Electron.NativeImage;
+  type: ClipItemType;
 }
 
 export interface ClipBoardItem {
@@ -44,6 +40,7 @@ export interface ClipBoardItem {
   appId: string;
   _rev: string;
   dateCreated: string;
+  _id: string;
 }
 
 export interface ClipStore {

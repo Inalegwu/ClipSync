@@ -22,10 +22,7 @@ export const DebugIpcs = createIpcSlice({
       console.log(`DEBUG::DATA:${data}::DESCRIPTION:${description}`);
     },
     async sendErrorData(_, { error, description, error_code }: ErrorDataArgs) {
-      const logsPath = path.join(
-        app.getPath("appData"),
-        "serpent/logs/logs.json"
-      );
+      const logsPath = path.join(app.getPath("appData"), "serpent/logs.json");
       const logString = superjson.stringify({ error, description, error_code });
       fs.writeFileSync(logsPath, logString, { encoding: "binary" });
 

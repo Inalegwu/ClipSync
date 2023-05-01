@@ -17,17 +17,18 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 export interface ClipItemProps {
-  data: ClipBoardItem;
+  data: {
+    doc: ClipBoardItem;
+  };
 }
 
 function ClipItem({ data }: ClipItemProps) {
   const { invoke } = useWindowApi();
   const { colorMode } = useColorModeValue();
   const { primaryColor } = usePrimaryColor();
-  const { deleteClipBoardItem } = useClipBoard();
 
   async function copy() {
-    await invoke.appendToClipBoard(data.data);
+    await invoke.appendToClipBoard(data.doc.data);
     toast.success("Copied", {
       style: {
         width: "200px",
@@ -35,12 +36,11 @@ function ClipItem({ data }: ClipItemProps) {
     });
   }
 
-  const parsedDate = Date.parse(data.dateCreated);
+  const parsedDate = Date.parse(data.doc.dateCreated);
   const relativeDate = dayjs(parsedDate).fromNow(true);
 
   function deleteClip() {
-    deleteClipBoardItem(data.id);
-    db.remove({ _id: data.id, _rev: data._rev! })
+    db.remove({ _id: data.doc._id, _rev: data.doc._rev! })
       .then(() => {
         toast.success("Deleted", {
           style: {
@@ -88,7 +88,7 @@ function ClipItem({ data }: ClipItemProps) {
             },
           }}
         >
-          {data.data}
+          {data.doc.data}
         </Paragraph>
         <Paragraph
           css={{
