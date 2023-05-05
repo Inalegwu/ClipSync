@@ -14,22 +14,13 @@ import {
   useSyncState,
   useUserState,
 } from "../state";
-import {
-  FiCopy,
-  FiDelete,
-  FiHome,
-  FiInfo,
-  FiLock,
-  FiRefreshCw,
-  FiTrash,
-} from "react-icons/fi";
+import { FiCopy, FiHome, FiInfo, FiRefreshCw } from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
 import { ErrorCode, SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
 import generateAppId from "../../shared/utils/generateAppId";
-import superjson from "superjson";
 
 function Settings() {
   const { colorMode, setColorMode } = useColorModeValue();
@@ -214,7 +205,7 @@ function Settings() {
       </Box>
       <Box
         css={{
-          height: "90%",
+          height: "94%",
           width: "100%",
           overflowX: "scroll",
           display: "flex",

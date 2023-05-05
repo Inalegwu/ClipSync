@@ -5,7 +5,7 @@ import { FiCopy, FiDelete } from "react-icons/fi";
 import { ClipBoardItem } from "../../shared/utils/types";
 
 export interface ClipImageProps {
-  data: ClipBoardItem;
+  data?: ClipBoardItem;
 }
 
 export default function ClipImage({ data }: ClipImageProps) {
@@ -20,20 +20,20 @@ export default function ClipImage({ data }: ClipImageProps) {
         marginBottom: "$1",
         padding: "$2",
         display: "flex",
-        flexDirection: "colum",
-        alignContent: "flex-start",
-        alignItems: "flex-start",
+        flexDirection: "column",
         gap: "$2",
+        height: "fit-content",
       }}
     >
       <Image
         css={{
           width: "100%",
+          height: "80%",
           borderRadius: "5px",
           border: "0.1px solid #3838383c",
         }}
       />
-      <Box css={{ display: "flex", gap: "$2" }}>
+      <Box css={{ display: "flex", gap: "$2", width: "100%", height: "10%" }}>
         <Button
           css={{
             background: `${colorMode === "Dark" ? "black" : "$whiteMuted"}`,

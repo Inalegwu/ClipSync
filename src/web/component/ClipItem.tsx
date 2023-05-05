@@ -1,13 +1,8 @@
 import React from "react";
 import { Box, Button, Paragraph } from "./styled";
 import toast from "react-hot-toast";
-import {
-  useClipBoard,
-  useColorModeValue,
-  usePrimaryColor,
-  useSyncState,
-} from "../state";
-import { FiCopy, FiDelete } from "react-icons/fi";
+import { useColorModeValue, usePrimaryColor } from "../state";
+import { FiCopy, FiTrash } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
 import type { ClipBoardItem, Row } from "../../shared/utils/types";
 import db from "../../shared/utils/db";
@@ -37,7 +32,7 @@ function ClipItem({ data }: ClipItemProps) {
   }
 
   const parsedDate = Date.parse(data.doc.dateCreated);
-  const relativeDate = dayjs(parsedDate).fromNow(true);
+  const relativeDate = dayjs(parsedDate).fromNow();
 
   function deleteClip() {
     db.remove({ _id: data.doc._id, _rev: data.doc._rev! })
@@ -83,6 +78,7 @@ function ClipItem({ data }: ClipItemProps) {
           css={{
             color: `${colorMode === "Dark" ? "white" : "black"}`,
             fontSize: "12px",
+            transition: "0.12s ease-in-out",
             "&:hover": {
               color: `${colorMode === "Dark" ? "$whiteMuted" : "$blackMuted"}`,
             },
@@ -96,7 +92,7 @@ function ClipItem({ data }: ClipItemProps) {
             color: `${colorMode === "Dark" ? "$whiteMuted" : "$blackMuted"}`,
           }}
         >
-          {relativeDate} ago
+          {relativeDate}
         </Paragraph>
       </Box>
       {/* actions */}
@@ -127,7 +123,7 @@ function ClipItem({ data }: ClipItemProps) {
             outlineColor: `${primaryColor}`,
           }}
         >
-          <FiDelete size={13} />
+          <FiTrash size={13} />
         </Button>
       </Box>
     </Box>

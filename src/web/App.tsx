@@ -20,7 +20,6 @@ import { useSyncState } from "./state/syncState";
  */
 import db from "../shared/utils/db";
 import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
-import { nativeImage } from "electron";
 
 export const App = () => {
   const { invoke } = useWindowApi();
@@ -44,10 +43,9 @@ export const App = () => {
       .readClipBoard()
       .then((res) => {
         if (res !== "") {
-          invoke.debugPrint({ data: appId, description: "Found Your App ID" });
           db.put({
             _id: new Date().toISOString(),
-            appId: appId!,
+            appId: appId,
             data: res,
             dateCreated: new Date().toISOString(),
           });
@@ -63,7 +61,12 @@ export const App = () => {
   }
 
   function readDb() {
-    db.allDocs({ include_docs: true, key: appId, descending: true })
+    db.allDocs({
+      include_docs: true,
+      startkey: appId,
+      descending: true,
+      attachments: true,
+    })
       .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
         setClipBoardData(res.rows);
       })
@@ -104,12 +107,9 @@ export const App = () => {
       invoke.clearClipBoard();
     }, 5000);
 
-    // run once the app is mounted
-    readDb();
-
     const readDbInterval = setInterval(() => {
       readDb();
-    }, 1000);
+    }, 100);
 
     /**
      *
