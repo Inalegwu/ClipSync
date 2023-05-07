@@ -96,7 +96,7 @@ function Settings() {
 
   function copyAppId() {
     invoke
-      .appendToClipBoard(appId!)
+      .appendTextToClipBoard(appId!)
       .then(() => {
         toast.success("Copied");
       })
@@ -106,6 +106,7 @@ function Settings() {
           error: err,
           description: "Failed to append to clipboard",
           error_code: ErrorCode.CLIPBOARD_WRITE_ERROR,
+          date: new Date(),
         });
       });
   }
@@ -144,11 +145,15 @@ function Settings() {
       .then(() => {
         toast.success("Saved Successfully");
       })
+      .then(() => {
+        setChanges(false);
+      })
       .catch((err) => {
         invoke.sendErrorData({
           error: err,
           description: "Failed To Save Settings",
           error_code: ErrorCode.FILE_WRITE_ERROR,
+          date: new Date(),
         });
         toast.error("An Error Occurred");
       });

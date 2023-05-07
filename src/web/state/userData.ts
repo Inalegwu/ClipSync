@@ -7,6 +7,9 @@ export interface UserState {
   setAppId: (id: string) => void;
 }
 
+const MiddleWare = (f: () => void) =>
+  devtools(persist(f, { name: "middleware" }));
+
 export const useUserState = create<UserState>()(
   persist(
     (set) => ({

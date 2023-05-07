@@ -18,7 +18,7 @@ export const ConfigIpcs = createIpcSlice({
     async saveSettings(_, settings: SettingsData) {
       const stringifiedSettings = superjson.stringify(settings);
       fs.writeFile(
-        path.join(app.getPath("appData"), "serpent/settings.json"),
+        path.join(app.getPath("appData"), "ClipSync/settings.json"),
         stringifiedSettings,
         "utf-8",
         (err) => {
@@ -30,7 +30,7 @@ export const ConfigIpcs = createIpcSlice({
     async readSettings() {
       const settingsPath = path.join(
         app.getPath("appData"),
-        "serpent/settings.json"
+        "ClipSync/settings.json"
       );
       const settingsData: SettingsData = superjson.parse(
         fs.readFileSync(settingsPath, { encoding: "utf-8" })

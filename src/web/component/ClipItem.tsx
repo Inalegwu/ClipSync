@@ -23,7 +23,7 @@ function ClipItem({ data }: ClipItemProps) {
   const { primaryColor } = usePrimaryColor();
 
   async function copy() {
-    await invoke.appendToClipBoard(data.doc.data);
+    await invoke.appendTextToClipBoard(data.doc.data);
     toast.success("Copied", {
       style: {
         width: "200px",

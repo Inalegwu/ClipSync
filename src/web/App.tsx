@@ -40,7 +40,7 @@ export const App = () => {
    */
   function readFromClipboard() {
     invoke
-      .readClipBoard()
+      .readClipBoardText()
       .then((res) => {
         if (res !== "") {
           db.put({
@@ -56,7 +56,16 @@ export const App = () => {
           error: reason,
           description: "Failed write clipboard content to database",
           error_code: ErrorCode.DATABASE_WRITE_ERROR,
+          date: new Date(),
         });
+      });
+    invoke
+      .readClipBoardImage()
+      .then((value) => {
+        invoke.debugPrint({ data: value, description: "clipboard image" });
+      })
+      .catch((err) => {
+        invoke.debugPrint({ data: err, description: "error reading image" });
       });
   }
 
@@ -75,6 +84,7 @@ export const App = () => {
           error: err,
           description: "Failed to read clipboards from database",
           error_code: ErrorCode.DATABASE_READ_ERROR,
+          date: new Date(),
         });
       });
   }
@@ -94,6 +104,7 @@ export const App = () => {
           error: reason,
           description: "Failed to read Settings",
           error_code: ErrorCode.FILE_READ_ERROR,
+          date: new Date(),
         });
       });
   }, [colorMode, canSync, primaryColor, appId, syncUrl]);
@@ -121,13 +132,30 @@ export const App = () => {
         live: true,
         retry: true,
         timeout: 10000,
-      }).catch((err) => {
-        invoke.sendErrorData({
-          error: err,
-          description: "Syncing Failed",
-          error_code: ErrorCode.DATABASE_SYNC_ERROR,
+      })
+        .on("complete", (info) => {
+          invoke.logSyncFinished({
+            pull: true,
+            push: true,
+            docs_read_pull: info.pull?.docs_read!,
+            docs_written_pull: info.pull?.docs_written!,
+            docs_read_push: info.push?.docs_read!,
+            docs_written_push: info.push?.docs_written!,
+            pull_start_time: info.pull?.start_time!,
+            push_start_time: info.push?.start_time!,
+            pull_doc_write_failures: info.pull?.doc_write_failures!,
+            push_doc_write_failures: info.push?.doc_write_failures!,
+          });
+          toast.success("All Items Synced Successfully");
+        })
+        .catch((err) => {
+          invoke.sendErrorData({
+            error: err,
+            description: "Syncing Failed",
+            error_code: ErrorCode.DATABASE_SYNC_ERROR,
+            date: new Date(),
+          });
         });
-      });
     }
 
     return () => {
@@ -148,7 +176,7 @@ export const App = () => {
    */
 
   function addToClipBoard(text: string) {
-    invoke.appendToClipBoard(text);
+    invoke.appendTextToClipBoard(text);
   }
 
   function scrollToBottom() {

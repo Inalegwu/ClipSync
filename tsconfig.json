@@ -10,7 +10,13 @@
     "strict": true,
     "noUnusedParameters": true,
     "noImplicitAny": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/"],
+      "@/web/*": ["./src/web/"],
+      "@shared/*": ["./src/shared/"]
+    }
   },
   "include": ["src", "tailwind.config.js"],
   "ts-node": {

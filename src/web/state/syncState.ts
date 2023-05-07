@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type SyncFrequency =
   | "FREQUENTLY"
@@ -13,9 +14,14 @@ export interface SyncStateProps {
   setSyncUrl: (url: string) => void;
 }
 
-export const useSyncState = create<SyncStateProps>((set) => ({
-  canSync: true,
-  syncUrl: "http://admin:admin@localhost:5984/clipboards",
-  changeSyncState: (state) => set(() => ({ canSync: state })),
-  setSyncUrl: (url: string) => set(() => ({ syncUrl: url })),
-}));
+export const useSyncState = create<SyncStateProps>()(
+  persist(
+    (set) => ({
+      canSync: true,
+      syncUrl: "http://clipsync_client@localhost:5984/clipboards",
+      changeSyncState: (state) => set(() => ({ canSync: state })),
+      setSyncUrl: (url: string) => set(() => ({ syncUrl: url })),
+    }),
+    { name: "syncData" }
+  )
+);

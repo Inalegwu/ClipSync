@@ -15,8 +15,8 @@ export enum ErrorCode {
   DATABASE_SYNC_ERROR = "DB_104",
   CLIPBOARD_READ_ERROR = "CLP_200",
   CLIPBOARD_WRITE_ERROR = "CLP_210",
-  FILE_READ_ERROR = "FLI_300",
-  FILE_WRITE_ERROR = "FLI_304",
+  FILE_READ_ERROR = "FLR_300",
+  FILE_WRITE_ERROR = "FLW_304",
   UNEXPECTED_ERROR = "UEX_700",
 }
 
@@ -58,6 +58,7 @@ export interface ErrorDataArgs {
   error: any;
   description: string;
   error_code: ErrorCode;
+  date: Date;
 }
 
 export interface Row {
@@ -76,3 +77,16 @@ export interface Row {
 
 export const Middlware = ({ f, name }: { f: () => any; name: string }) =>
   persist(f, { name });
+
+export interface SyncLogArgs {
+  pull: boolean;
+  push: boolean;
+  docs_read_push: number | undefined;
+  docs_written_push: number | undefined;
+  docs_read_pull: number | undefined;
+  docs_written_pull: number | undefined;
+  pull_start_time: Date | undefined;
+  push_start_time: Date | undefined;
+  pull_doc_write_failures: number | undefined;
+  push_doc_write_failures: number | undefined;
+}

@@ -29,14 +29,16 @@ app.whenReady().then(() => {
   mainWindow.loadFile("dist/index.html");
   mainWindow.hide();
 
-  handle.readClipBoard();
-  handle.appendToClipBoard();
+  handle.readClipBoardText();
+  handle.appendTextToClipBoard();
   handle.readSettings();
   handle.saveSettings();
   handle.openLinkInBrowserWindow();
   handle.debugPrint();
   handle.sendErrorData();
   handle.clearClipBoard();
+  handle.logSyncFinished();
+  handle.readClipBoardImage();
   // new Tray(path.join(__dirname, "assets/images/AppIcon.ico"));
 
   globalShortcut.register("Shift+Space", () => {

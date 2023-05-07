@@ -11,7 +11,7 @@ import { ClipBoardData } from "../../utils/types";
  */
 export const ProcessIpcs = createIpcSlice({
   main: {
-    async readClipBoard() {
+    async readClipBoardText() {
       const clipBoardData = clipboard.readText();
 
       // const clipBoardText = clipboard.readText();
@@ -30,11 +30,16 @@ export const ProcessIpcs = createIpcSlice({
 
       return clipBoardData;
     },
-    async appendToClipBoard(_, text: string) {
+    async appendTextToClipBoard(_, text: string) {
       clipboard.writeText(text, "clipboard");
     },
     async clearClipBoard() {
       clipboard.clear();
+    },
+    async readClipBoardImage() {
+      const clipBoardImage = clipboard.readImage("clipboard");
+
+      return clipBoardImage;
     },
   },
 });
