@@ -15,8 +15,10 @@ import superjson from "superjson";
  * MIGHT REMOVE.
  *
  * LATER : only remove debug print function
- * send error data will be used for error reporting in test builds
- * release build will send usage data optionally
+ * send error data will be used for error reporting in testing
+ * stage
+ * final release will opt into sending anonymous error
+ * data
  *
  *
  * */
@@ -38,6 +40,7 @@ export const DebugIpcs = createIpcSlice({
         description,
         error_code,
         date,
+        platform: process.platform,
       });
       fs.writeFileSync(logsPath, logString, { encoding: "binary" });
 
@@ -45,6 +48,10 @@ export const DebugIpcs = createIpcSlice({
        *
        * TODO implement sending error logs to a remote url for parsing and
        * TODO debugging...y'know like how the pros do it
+       *
+       * set up a bug tracking API and connect said api to a frontend
+       * where these issues can be tracked...
+       *
        *
        */
 

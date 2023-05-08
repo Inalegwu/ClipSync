@@ -106,7 +106,7 @@ function Settings() {
           error: err,
           description: "Failed to append to clipboard",
           error_code: ErrorCode.CLIPBOARD_WRITE_ERROR,
-          date: new Date(),
+          date: new Date().toISOString(),
         });
       });
   }
@@ -128,8 +128,7 @@ function Settings() {
 
   /**
    *
-   * SAVE THE CUSTOMIZATION TO DISK
-   * FOR FUTURE USAGE
+   * SAVE THE CUSTOMIZATION TO ("appData")/ClipSync/settings.json
    *
    */
   function saveSettings() {
@@ -153,7 +152,7 @@ function Settings() {
           error: err,
           description: "Failed To Save Settings",
           error_code: ErrorCode.FILE_WRITE_ERROR,
-          date: new Date(),
+          date: new Date().toISOString(),
         });
         toast.error("An Error Occurred");
       });

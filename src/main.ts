@@ -39,7 +39,6 @@ app.whenReady().then(() => {
   handle.clearClipBoard();
   handle.logSyncFinished();
   handle.readClipBoardImage();
-  // new Tray(path.join(__dirname, "assets/images/AppIcon.ico"));
 
   globalShortcut.register("Shift+Space", () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();

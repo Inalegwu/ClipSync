@@ -56,7 +56,7 @@ export const App = () => {
           error: reason,
           description: "Failed write clipboard content to database",
           error_code: ErrorCode.DATABASE_WRITE_ERROR,
-          date: new Date(),
+          date: new Date().toISOString(),
         });
       });
     invoke
@@ -84,7 +84,7 @@ export const App = () => {
           error: err,
           description: "Failed to read clipboards from database",
           error_code: ErrorCode.DATABASE_READ_ERROR,
-          date: new Date(),
+          date: new Date().toISOString(),
         });
       });
   }
@@ -104,7 +104,7 @@ export const App = () => {
           error: reason,
           description: "Failed to read Settings",
           error_code: ErrorCode.FILE_READ_ERROR,
-          date: new Date(),
+          date: new Date().toISOString(),
         });
       });
   }, [colorMode, canSync, primaryColor, appId, syncUrl]);
@@ -153,7 +153,7 @@ export const App = () => {
             error: err,
             description: "Syncing Failed",
             error_code: ErrorCode.DATABASE_SYNC_ERROR,
-            date: new Date(),
+            date: new Date().toISOString(),
           });
         });
     }
@@ -169,12 +169,6 @@ export const App = () => {
     readUserPreferences();
   }, []);
 
-  /***
-   *
-   * refactor this block to add to the database as well as append to the clipboard
-   *
-   */
-
   function addToClipBoard(text: string) {
     invoke.appendTextToClipBoard(text);
   }
@@ -187,6 +181,8 @@ export const App = () => {
     viewRef.current?.scrollTo({ top: -clipBoardData.length });
   }
 
+  // listens for the PageUp and PageDown keys to
+  // scroll the page
   window.addEventListener("keydown", (ev) => {
     if (ev.key === "PageUp") {
       scrollToTop();

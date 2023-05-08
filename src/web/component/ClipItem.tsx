@@ -4,7 +4,11 @@ import toast from "react-hot-toast";
 import { useColorModeValue, usePrimaryColor } from "../state";
 import { FiCopy, FiTrash } from "react-icons/fi";
 import useWindowApi from "../hooks/useWindowApi";
-import type { ClipBoardItem, Row } from "../../shared/utils/types";
+import {
+  ErrorCode,
+  type ClipBoardItem,
+  type Row,
+} from "../../shared/utils/types";
 import db from "../../shared/utils/db";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -44,6 +48,12 @@ function ClipItem({ data }: ClipItemProps) {
         });
       })
       .catch((err) => {
+        invoke.sendErrorData({
+          date: new Date().toISOString(),
+          description: "failed to delete clip",
+          error: err,
+          error_code: ErrorCode.CLIPBOARD_DELETE_ERROR,
+        });
         toast.error(err);
       });
   }

@@ -4,7 +4,8 @@ import { createIpcSlice } from "interprocess";
 /**
  *
  * HANDLE OPENING THINGS OUTSIDE THE APP
- * JUST A SHELL FOR OPENING EXTERNAL LINKS
+ * JUST A WRAPPER AROUND THE ELECTRON SHELL
+ * FOR OPENING EXTERNAL LINKS
  *
  */
 export const ExternalIpcs = createIpcSlice({
