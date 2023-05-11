@@ -6,11 +6,10 @@ build({
     productName: "ClipSync",
     artifactName: "${productName}-${version}-${platform}-${arch}.${ext}",
     directories: {
-      output: "../clipsync/release",
+      output: "./release",
     },
     win: {
       icon: "./src/assets/images/AppIcon.ico",
-      target: "msi",
     },
     mac: {
       icon: "./src/assets/images/AppIcon.icns",

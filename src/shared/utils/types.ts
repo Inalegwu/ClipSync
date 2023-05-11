@@ -15,7 +15,7 @@ export enum ErrorCode {
   DATABASE_SYNC_ERROR = "DB_104",
   CLIPBOARD_READ_ERROR = "CLP_200",
   CLIPBOARD_WRITE_ERROR = "CLP_210",
-  CLIPBOARD_DELETE_ERROR = "CLIP_220",
+  CLIPBOARD_DELETE_ERROR = "CLP_220",
   FILE_READ_ERROR = "FLR_300",
   FILE_WRITE_ERROR = "FLW_304",
   UNEXPECTED_ERROR = "UEX_700",
@@ -27,6 +27,7 @@ export interface SettingsData {
   color: string;
   appId: string | undefined;
   syncUrl: string;
+  isAdvanceMode: boolean;
 }
 
 export type ClipItemType = "IMAGE" | "HTML" | "TEXT";

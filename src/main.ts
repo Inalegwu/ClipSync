@@ -14,7 +14,7 @@ app.whenReady().then(() => {
     frame: false,
     autoHideMenuBar: true,
     width: 400,
-    height: 400,
+    height: 445,
     resizable: false,
     vibrancy: "under-window",
     webPreferences: {
@@ -22,7 +22,7 @@ app.whenReady().then(() => {
       sandbox: false,
     },
     x: 960,
-    y: 305,
+    y: 257,
     icon: "./assets/images/AppIcon.ico",
   });
 

@@ -54,7 +54,6 @@ export const DebugIpcs = createIpcSlice({
        *
        *
        */
-
       if (process.env.NODE_ENV === "development") {
         console.log(
           `ERROR:${error}::DESCRIPTION:${description}::ERROR CODE :${error_code}`

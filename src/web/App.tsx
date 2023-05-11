@@ -1,6 +1,7 @@
 import React from "react";
 import useWindowApi from "./hooks/useWindowApi";
 import {
+  useAdvanceMode,
   useClipBoard,
   useColorModeValue,
   usePrimaryColor,
@@ -26,18 +27,14 @@ export const App = () => {
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
   const { canSync, syncUrl, setSyncUrl, changeSyncState } = useSyncState();
+  const { setAdvanceMode } = useAdvanceMode();
   const { clipBoardData, setClipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const viewRef = React.useRef<HTMLDivElement>(null);
 
-  /**
-   *
-   * LISTEN TO CLIPBOARD CHANGES,
-   * PUSH TO THE DATABASE AND READ FROM
-   * THE SAME DATABASE IN THE SAME PASS
-   *
-   */
+  // read text from the clipboard and append it to the
+  // local pouchdb database
   function readFromClipboard() {
     invoke
       .readClipBoardText()
@@ -59,16 +56,26 @@ export const App = () => {
           date: new Date().toISOString(),
         });
       });
+  }
+
+  // read images from the clipboard and append append it to the
+  // local pouchdb database
+  function readClipBoardImage() {
+    console.log("CONSOLE.LOG::READING CLIPBOARD IMAGE...");
     invoke
       .readClipBoardImage()
       .then((value) => {
-        invoke.debugPrint({ data: value, description: "clipboard image" });
+        invoke.debugPrint({ data: value, description: "Clipboard image" });
       })
       .catch((err) => {
-        invoke.debugPrint({ data: err, description: "error reading image" });
+        invoke.debugPrint({
+          data: err,
+          description: "Failed to read Clipboard Image",
+        });
       });
   }
 
+  // read clipboard items from the local pouchdb database
   function readDb() {
     db.allDocs({
       include_docs: true,
@@ -77,6 +84,12 @@ export const App = () => {
       attachments: true,
     })
       .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
+        // set the clipboard data to the entire row data
+        // received from the db , instead of appending
+        // appending will continually add items to the list
+        // and this will cause an infinite render loop, which is very
+        // hurtful to the app performance.In fact the app will be stuck
+        // so there will be no performance
         setClipBoardData(res.rows);
       })
       .catch((err) => {
@@ -98,6 +111,7 @@ export const App = () => {
         setPrimaryColor(settings.color);
         setAppId(settings.appId!);
         setSyncUrl(settings.syncUrl);
+        setAdvanceMode(settings.isAdvanceMode);
       })
       .catch((reason) => {
         invoke.sendErrorData({
@@ -107,26 +121,31 @@ export const App = () => {
           date: new Date().toISOString(),
         });
       });
-  }, [colorMode, canSync, primaryColor, appId, syncUrl]);
+  }, [colorMode, canSync, primaryColor, appId, syncUrl, setAdvanceMode]);
 
   React.useEffect(() => {
+    // read the clipboard every 2 seconds
     const interval = setInterval(() => {
       readFromClipboard();
+      readClipBoardImage();
     }, 2000);
 
+    // clears the clipboard every 5 seconds
     const clearClipBoardInterval = setInterval(() => {
       invoke.clearClipBoard();
     }, 5000);
 
+    // read the database every 100 seconds
+    // by this time , at some point , the clipboard will be empty
+    // and there is code to ensure nothing is appended when the clipboard is empty
+    // in readClipBoard()
     const readDbInterval = setInterval(() => {
       readDb();
     }, 100);
 
-    /**
-     *
-     * begin the syncing
-     *
-     */
+    // if the app is allowed to sync ,
+    // begin the live syncing of the local
+    // instance to the remote instance and vice versa
     if (canSync === true) {
       db.sync(syncUrl, {
         live: true,
@@ -158,6 +177,8 @@ export const App = () => {
         });
     }
 
+    // dispose of all intervals when done
+    // if not , bad things happen
     return () => {
       clearInterval(interval);
       clearInterval(clearClipBoardInterval);
@@ -165,10 +186,16 @@ export const App = () => {
     };
   }, []);
 
+  // run read user preferences only once
+  // why did i use memo ? no reason exactly
+  // i really just wanted my effect code separate
   React.useMemo(() => {
     readUserPreferences();
   }, []);
 
+  // allows the user type in data to append to the clipboard
+  // I don't know if this is something people will use ,
+  // but I use it
   function addToClipBoard(text: string) {
     invoke.appendTextToClipBoard(text);
   }

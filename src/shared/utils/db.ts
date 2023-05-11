@@ -3,9 +3,12 @@ import PouchDB from "pouchdb";
 /**
  *
  * INSTANTIATE THE POUCHDB DATABASE
- * TO CLIPBOARDS. THIS IN ITSELF IF APPLICATION SPECIFIC
- * BUT IN THE FUTURE,THE DB NAME WILL BE THE REMOTE SERVER
- * FOR SYNCING ACROSS THE NETWORK
+ * TO CLIPBOARDS. the clipboard name will be native to the app
+ * the sync url, will be setup to the default remote DB
+ *
+ * users that want to use the self-hosted option , can always
+ * replace it with their remote couch db url ...
+ *
  *
  */
 

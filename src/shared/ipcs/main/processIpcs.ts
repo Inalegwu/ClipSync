@@ -37,7 +37,7 @@ export const ProcessIpcs = createIpcSlice({
       clipboard.clear();
     },
     async readClipBoardImage() {
-      const clipBoardImage = clipboard.readImage("clipboard");
+      const clipBoardImage = clipboard.readImage();
 
       return clipBoardImage;
     },

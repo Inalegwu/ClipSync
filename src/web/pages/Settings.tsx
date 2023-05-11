@@ -8,28 +8,37 @@ import {
   Title,
 } from "../component/styled";
 import {
+  useAdvanceMode,
   useClipBoard,
   useColorModeValue,
   usePrimaryColor,
   useSyncState,
   useUserState,
 } from "../state";
-import { FiCopy, FiHome, FiInfo, FiRefreshCw } from "react-icons/fi";
+import { FiCopy, FiHome, FiInfo, FiRefreshCw, FiTrash } from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
 import { ErrorCode, SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
 import generateAppId from "../../shared/utils/generateAppId";
+import db from "../../shared/utils/db";
+
+// TODO Add a section to allow users to replace the
+// sync url of the app to their local couchDB instance.
+//! maybe add something like an advance mode to the app where this is available
 
 function Settings() {
+  const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
   const { canSync, changeSyncState, syncUrl } = useSyncState();
+  const { isAdvanceMode, setAdvanceMode } = useAdvanceMode();
+  const { clipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
-  const { invoke } = useWindowApi();
   const themeSwitchRef = React.useRef<SwitchRef>(null);
   const syncSwitchRef = React.useRef<SwitchRef>(null);
+  const advanceModeSwitchRef = React.useRef<SwitchRef>(null);
   const [changes, setChanges] = React.useState<boolean>(false);
 
   /**
@@ -46,6 +55,11 @@ function Settings() {
       syncSwitchRef.current?.setActive(true);
     } else {
       syncSwitchRef.current?.setActive(false);
+    }
+    if (isAdvanceMode === true) {
+      advanceModeSwitchRef.current?.setActive(true);
+    } else {
+      advanceModeSwitchRef.current?.setActive(false);
     }
     invoke.readSettings().then((res) => {
       setAppId(res.appId!);
@@ -138,6 +152,7 @@ function Settings() {
       color: primaryColor,
       appId: appId!,
       syncUrl: syncUrl,
+      isAdvanceMode: isAdvanceMode,
     };
     invoke
       .saveSettings(settingsData)
@@ -156,6 +171,33 @@ function Settings() {
         });
         toast.error("An Error Occurred");
       });
+  }
+
+  function emptyClipBoard() {
+    db.destroy();
+  }
+
+  function activeAdvancedMode() {
+    setChanges(true);
+
+    const advancedModeActive = advanceModeSwitchRef.current?.active();
+
+    if (advancedModeActive === false) {
+      toast.success("Welcome To Advance Mode", { style: { fontSize: "12px" } });
+      advanceModeSwitchRef.current?.setActive(true);
+      setAdvanceMode(true);
+    } else {
+      toast.success("Well ,Seems like your done with advance mode", {
+        style: { fontSize: "12px" },
+      });
+      advanceModeSwitchRef.current?.setActive(false);
+      setAdvanceMode(false);
+    }
+  }
+
+  function copySyncUrl() {
+    invoke.appendTextToClipBoard(syncUrl);
+    toast.success("Copied Successfully...");
   }
 
   return (
@@ -266,6 +308,90 @@ function Settings() {
               type="color"
             />
           </SettingsItem>
+          <SettingsItem>
+            <Box>
+              <Paragraph
+                css={{
+                  color: `${colorMode === "Dark" ? "white" : "black"}`,
+                  fontSize: "10px",
+                }}
+              >
+                My Clips
+              </Paragraph>
+              <Paragraph
+                css={{
+                  color: `${colorMode === "Dark" ? "white" : "black"}`,
+                  fontSize: "12px",
+                }}
+              >
+                {clipBoardData.length}
+              </Paragraph>
+            </Box>
+            <Button
+              onClick={emptyClipBoard}
+              css={{
+                backgroundColor: `${
+                  colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
+                }`,
+                color: "$danger",
+                "&:hover": {
+                  backgroundColor: "$danger",
+                  color: "white",
+                },
+              }}
+            >
+              <FiTrash size={13} />
+            </Button>
+          </SettingsItem>
+          <SettingsItem>
+            <Paragraph
+              css={{
+                color: `${colorMode === "Dark" ? "white" : "black"}`,
+                fontSize: "13px",
+              }}
+            >
+              Advance Mode
+            </Paragraph>
+            <Switch onClick={activeAdvancedMode} ref={advanceModeSwitchRef} />
+          </SettingsItem>
+          {isAdvanceMode === true ? (
+            <SettingsItem>
+              <Box
+                css={{ display: "flex", flexDirection: "column", gap: "$1" }}
+              >
+                <Paragraph
+                  css={{
+                    color: `${colorMode === "Dark" ? "white" : "black"}`,
+                    fontSize: "12px",
+                  }}
+                >
+                  Sync Url
+                </Paragraph>
+                <Paragraph css={{ fontSize: "12px", color: `${primaryColor}` }}>
+                  {syncUrl}
+                </Paragraph>
+              </Box>
+              <Button
+                onClick={copySyncUrl}
+                css={{
+                  color: `${primaryColor}`,
+                  background: `${
+                    colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
+                  }`,
+                  "&:hover": {
+                    background: `${primaryColor}`,
+                    color: "white",
+                  },
+                  cursor: "pointer",
+                }}
+                variant={colorMode === "Dark" ? "dark" : "light"}
+              >
+                <FiCopy />
+              </Button>
+            </SettingsItem>
+          ) : (
+            <></>
+          )}
           <Title
             css={{
               fontSize: "14px",
