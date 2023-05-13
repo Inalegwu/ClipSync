@@ -22,8 +22,7 @@ app.whenReady().then(() => {
       sandbox: false,
     },
     x: 960,
-    y: 257,
-    icon: "./assets/images/AppIcon.ico",
+    y: 258,
   });
 
   mainWindow.loadFile("dist/index.html");
@@ -46,9 +45,13 @@ app.whenReady().then(() => {
 
   // mainWindow.webContents.openDevTools({ mode: "detach" });
 
+  // wait until the final content of the page is loaded before showing the
+  // window, to prevent having a white screen while the app is still spinning up...
   mainWindow.webContents.on("did-finish-load", () => {
     mainWindow.show();
   });
 });
+
+app.setName("ClipSync");
 
 app.once("window-all-closed", () => app.quit());

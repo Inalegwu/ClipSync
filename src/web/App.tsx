@@ -21,6 +21,7 @@ import { useSyncState } from "./state/syncState";
  */
 import db from "../shared/utils/db";
 import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
+import ClipImage from "./component/ClipImage";
 
 export const App = () => {
   const { invoke } = useWindowApi();
@@ -45,6 +46,7 @@ export const App = () => {
             appId: appId,
             data: res,
             dateCreated: new Date().toISOString(),
+            device: "laptop",
           });
         }
       })
@@ -61,11 +63,13 @@ export const App = () => {
   // read images from the clipboard and append append it to the
   // local pouchdb database
   function readClipBoardImage() {
-    console.log("CONSOLE.LOG::READING CLIPBOARD IMAGE...");
     invoke
       .readClipBoardImage()
       .then((value) => {
-        invoke.debugPrint({ data: value, description: "Clipboard image" });
+        invoke.debugPrint({
+          data: value.isEmpty(),
+          description: "Clipboard image",
+        });
       })
       .catch((err) => {
         invoke.debugPrint({
@@ -127,7 +131,7 @@ export const App = () => {
     // read the clipboard every 2 seconds
     const interval = setInterval(() => {
       readFromClipboard();
-      readClipBoardImage();
+      // readClipBoardImage();
     }, 2000);
 
     // clears the clipboard every 5 seconds
@@ -166,6 +170,10 @@ export const App = () => {
             push_doc_write_failures: info.push?.doc_write_failures!,
           });
           toast.success("All Items Synced Successfully");
+        })
+        .on("error", (err) => {
+          invoke.debugPrint({ data: err, description: "syncing paused" });
+          toast.error("An Error Occured While Syncing...");
         })
         .catch((err) => {
           invoke.sendErrorData({
@@ -217,6 +225,14 @@ export const App = () => {
       scrollToBottom();
     }
   });
+
+  window.ononline = () => {
+    toast.success("Connection Established");
+  };
+
+  window.onoffline = () => {
+    toast.loading("Waiting for network to continue syncing");
+  };
 
   return (
     <Box
@@ -312,6 +328,7 @@ export const App = () => {
             return <ClipItem data={data} key={idx} />;
             // return <Box key={idx}>{data.id}</Box>;
           })}
+        {/* <ClipImage /> */}
       </Box>
       <Input
         ref={inputRef}

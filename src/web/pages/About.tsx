@@ -107,10 +107,11 @@ function About() {
               }`,
             }}
           >
-            📱💻Well I work with my phone and my laptop a lot and I do a lot of
-            copying and pasting and so I decided to build ClipSync to give me
-            access to whatever I copy on my laptop or phone in realtime.Did I
-            mention it was realtime 🤸‍♂️?
+            📱💻Have you ever had to type something you saw in an article into
+            your phone , maybe as a text message ? If yes then you've felt my
+            pain before.Well ClipSync makes sure you don't have to type it out
+            manually, just Copy it on your PC or your Phone and have it every
+            where instantly...Yeah it's realtime 🤸‍♂️ as long as you want it to be
           </Paragraph>
         </Box>
         <Box
@@ -141,8 +142,12 @@ function About() {
               }`,
             }}
           >
-            🎉Yes it is and I plan on making sure it stays that way.But you can
-            donate if you want to
+            🎉For the most part , yes it is.However , the free tier is limited
+            to 2 devices, Your PC and your phone , which is fine for 99.9% of
+            users.You can also pay a one time fee to unlock access to infinite
+            devices this is for the Hyper User that wants everything everywhere.
+            and we know just how few of those there are. Donations are also
+            available.
           </Paragraph>
         </Box>
         <Box
@@ -173,9 +178,9 @@ function About() {
               }`,
             }}
           >
-            🧑🏾‍👩🏼‍🧒🏽It's for everyone. So you don't have to type everything you
-            see in your laptop into your phone just copy it and have it
-            available when you go into your phone
+            🧑🏾‍👩🏼‍🧒🏽It's for everyone whose every felt the pain of manually
+            typing out some information from their laptop screen into their
+            phone or vice versa
           </Paragraph>
         </Box>
         <Box
@@ -289,9 +294,7 @@ function About() {
         >
           <Button
             css={{
-              background: `${
-                colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
-              }`,
+              background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
               color: `${primaryColor}`,
               cursor: "pointer",
               outlineColor: `${primaryColor}`,
@@ -309,9 +312,7 @@ function About() {
           </Button>
           <Button
             css={{
-              background: `${
-                colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
-              }`,
+              background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
               color: `${primaryColor}`,
               cursor: "pointer",
               outlineColor: `${primaryColor}`,
@@ -329,9 +330,7 @@ function About() {
           </Button>
           <Button
             css={{
-              background: `${
-                colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
-              }`,
+              background: `${colorMode === "Dark" ? "$blackMuted" : "white"}`,
               color: `${primaryColor}`,
               cursor: "pointer",
               outlineColor: `${primaryColor}`,

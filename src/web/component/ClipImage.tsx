@@ -28,12 +28,12 @@ export default function ClipImage({ data }: ClipImageProps) {
       <Image
         css={{
           width: "100%",
-          height: "80%",
+          height: "60%",
           borderRadius: "5px",
-          border: "0.1px solid #3838383c",
+          border: `0.1px solid ${colorMode === "Dark" ? "$black" : "white"}`,
         }}
       />
-      <Box css={{ display: "flex", gap: "$2", width: "100%", height: "10%" }}>
+      <Box css={{ display: "flex", gap: "$2", width: "100%", height: "40%" }}>
         <Button
           css={{
             background: `${colorMode === "Dark" ? "black" : "$whiteMuted"}`,

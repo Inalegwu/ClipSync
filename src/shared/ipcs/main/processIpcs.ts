@@ -14,20 +14,6 @@ export const ProcessIpcs = createIpcSlice({
     async readClipBoardText() {
       const clipBoardData = clipboard.readText();
 
-      // const clipBoardText = clipboard.readText();
-      // const clipBoardImage = clipboard.readImage();
-
-      // const clipBoardData: Array<ClipBoardData> = [
-      //   {
-      //     data: clipBoardText,
-      //     type: "TEXT",
-      //   },
-      //   {
-      //     data: clipBoardImage,
-      //     type: "IMAGE",
-      //   },
-      // ];
-
       return clipBoardData;
     },
     async appendTextToClipBoard(_, text: string) {
@@ -37,9 +23,14 @@ export const ProcessIpcs = createIpcSlice({
       clipboard.clear();
     },
     async readClipBoardImage() {
-      const clipBoardImage = clipboard.readImage();
+      const clipBoardImage = clipboard.readImage("clipboard");
+
+      // console.log(clipBoardImage.isEmpty());
 
       return clipBoardImage;
+    },
+    async appendImageToClipBoard(_, image: Electron.NativeImage) {
+      clipboard.writeImage(image);
     },
   },
 });

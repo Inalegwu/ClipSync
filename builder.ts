@@ -13,7 +13,6 @@ build({
     },
     mac: {
       icon: "./src/assets/images/AppIcon.icns",
-      target: "dmg",
     },
   },
 });

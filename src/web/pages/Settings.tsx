@@ -15,7 +15,15 @@ import {
   useSyncState,
   useUserState,
 } from "../state";
-import { FiCopy, FiHome, FiInfo, FiRefreshCw, FiTrash } from "react-icons/fi";
+import {
+  FiCopy,
+  FiEdit,
+  FiEdit2,
+  FiHome,
+  FiInfo,
+  FiRefreshCw,
+  FiTrash,
+} from "react-icons/fi";
 import Switch, { SwitchRef } from "../component/Switch";
 import { SettingsItem } from "../component/SettingsItem";
 import useWindowApi from "../hooks/useWindowApi";
@@ -24,15 +32,11 @@ import { Toaster, toast } from "react-hot-toast";
 import generateAppId from "../../shared/utils/generateAppId";
 import db from "../../shared/utils/db";
 
-// TODO Add a section to allow users to replace the
-// sync url of the app to their local couchDB instance.
-//! maybe add something like an advance mode to the app where this is available
-
 function Settings() {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
-  const { canSync, changeSyncState, syncUrl } = useSyncState();
+  const { canSync, changeSyncState, syncUrl, setSyncUrl } = useSyncState();
   const { isAdvanceMode, setAdvanceMode } = useAdvanceMode();
   const { clipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
@@ -40,11 +44,10 @@ function Settings() {
   const syncSwitchRef = React.useRef<SwitchRef>(null);
   const advanceModeSwitchRef = React.useRef<SwitchRef>(null);
   const [changes, setChanges] = React.useState<boolean>(false);
+  const [editing, setEditing] = React.useState<boolean>(false);
 
-  /**
-   * ANIMATE THE SWITCHES BASED ON THE STATE SET FROM SETTINGS
-   * DID IT THIS WAY FOR THE COOL ANIMATION
-   */
+  // ANIMATE THE SWITCHES BASED ON THE STATE SET FROM SETTINGS
+  // DID IT THIS WAY FOR THE COOL ANIMATION
   React.useEffect(() => {
     if (colorMode === "Dark") {
       themeSwitchRef.current?.setActive(true);
@@ -66,9 +69,10 @@ function Settings() {
     });
   }, []);
 
-  /**
-   * SWITCH UI TO DARK MODE
-   */
+  // enter dark mode
+  //!IMPORTANT might have to consider having other color
+  //! themes although this app isn't for just devs
+  //! so multiple color themes isn't necessary
   function activateDarkMode() {
     setChanges(true);
     const isActive = themeSwitchRef.current?.active();
@@ -82,11 +86,7 @@ function Settings() {
     }
   }
 
-  /**
-   *
-   * ACTIVATE OR DEACTIVATE SYNCING FOR THE APP
-   *
-   */
+  // activate or deactive syncing
   function activateSyncing() {
     setChanges(true);
     const isActive = syncSwitchRef.current?.active();
@@ -108,6 +108,10 @@ function Settings() {
     }
   }
 
+  // write the application id to the
+  // the clipboard.this risky though
+  // cause now it's more or less publicly
+  // visible
   function copyAppId() {
     invoke
       .appendTextToClipBoard(appId!)
@@ -125,11 +129,7 @@ function Settings() {
       });
   }
 
-  /**
-   *
-   * GENERATE A NEW APPLICATION ID
-   *
-   */
+  //GENERATE A NEW APPLICATION ID
   function refreshAppId() {
     setChanges(true);
     toast.success(
@@ -140,11 +140,7 @@ function Settings() {
     setAppId(newAppId);
   }
 
-  /**
-   *
-   * SAVE THE CUSTOMIZATION TO ("appData")/ClipSync/settings.json
-   *
-   */
+  //SAVE THE CUSTOMIZATION TO ("appData")/ClipSync/settings.json
   function saveSettings() {
     const settingsData: SettingsData = {
       colorMode,
@@ -173,11 +169,22 @@ function Settings() {
       });
   }
 
+  // there has to be a better way to clear the
+  // clipboard but this works , because once the
+  // main page is reloaded the db is recreated
+  // TODO figure out how to delete items in the
+  // sync as well because right now deletion meanse every thing
+  // is still in the synced db and once the app is reloaded
+  // all the data is there again
   function emptyClipBoard() {
     db.destroy();
   }
 
-  function activeAdvancedMode() {
+  // advanced mode allows the user to change
+  // the sync destination to their custom
+  // couch db instance=>this is mostly for power
+  // users
+  function activateAdvancedMode() {
     setChanges(true);
 
     const advancedModeActive = advanceModeSwitchRef.current?.active();
@@ -339,6 +346,7 @@ function Settings() {
                   color: "white",
                 },
               }}
+              title="Empty Clipboard"
             >
               <FiTrash size={13} />
             </Button>
@@ -352,12 +360,17 @@ function Settings() {
             >
               Advance Mode
             </Paragraph>
-            <Switch onClick={activeAdvancedMode} ref={advanceModeSwitchRef} />
+            <Switch onClick={activateAdvancedMode} ref={advanceModeSwitchRef} />
           </SettingsItem>
           {isAdvanceMode === true ? (
             <SettingsItem>
               <Box
-                css={{ display: "flex", flexDirection: "column", gap: "$1" }}
+                css={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "$2",
+                  width: "80%",
+                }}
               >
                 <Paragraph
                   css={{
@@ -367,27 +380,67 @@ function Settings() {
                 >
                   Sync Url
                 </Paragraph>
-                <Paragraph css={{ fontSize: "12px", color: `${primaryColor}` }}>
-                  {syncUrl}
-                </Paragraph>
+                {editing === false ? (
+                  <Paragraph
+                    css={{ fontSize: "12px", color: `${primaryColor}` }}
+                  >
+                    {syncUrl}
+                  </Paragraph>
+                ) : (
+                  <Input
+                    css={{ padding: "$1", width: "100%" }}
+                    variant={colorMode === "Dark" ? "dark" : "light"}
+                    type="text"
+                    defaultValue={syncUrl}
+                    onChange={() => {
+                      setChanges(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        setSyncUrl(e.currentTarget.value);
+                      }
+                    }}
+                  />
+                )}
               </Box>
-              <Button
-                onClick={copySyncUrl}
-                css={{
-                  color: `${primaryColor}`,
-                  background: `${
-                    colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
-                  }`,
-                  "&:hover": {
+              <Box css={{ display: "flex", gap: "$2" }}>
+                <Button
+                  onClick={copySyncUrl}
+                  css={{
+                    color: `${primaryColor}`,
+                    background: `${
+                      colorMode === "Dark" ? "$blackMuted" : "$whiteMuted"
+                    }`,
+                    "&:hover": {
+                      background: `${primaryColor}`,
+                      color: "white",
+                    },
+                    cursor: "pointer",
+                  }}
+                  variant={colorMode === "Dark" ? "dark" : "light"}
+                >
+                  <FiCopy />
+                </Button>
+                <Button
+                  onClick={() => {
+                    setEditing(!editing);
+                  }}
+                  css={{
+                    color: "$whiteMuted",
                     background: `${primaryColor}`,
-                    color: "white",
-                  },
-                  cursor: "pointer",
-                }}
-                variant={colorMode === "Dark" ? "dark" : "light"}
-              >
-                <FiCopy />
-              </Button>
+                    "&:hover": {
+                      color: "white",
+                    },
+                    cursor: "pointer",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FiEdit2 />
+                </Button>
+              </Box>
             </SettingsItem>
           ) : (
             <></>

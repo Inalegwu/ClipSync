@@ -3,6 +3,11 @@ import { Box, Button, Paragraph } from "./styled";
 import toast from "react-hot-toast";
 import { useColorModeValue, usePrimaryColor } from "../state";
 import { FiCopy, FiTrash } from "react-icons/fi";
+import {
+  IoIosLaptop,
+  IoMdPhoneLandscape,
+  IoMdPhonePortrait,
+} from "react-icons/io";
 import useWindowApi from "../hooks/useWindowApi";
 import {
   ErrorCode,
@@ -53,6 +58,7 @@ function ClipItem({ data }: ClipItemProps) {
           description: "failed to delete clip",
           error: err,
           error_code: ErrorCode.CLIPBOARD_DELETE_ERROR,
+          item: `ID:${data.doc._id} :: ${data.doc._rev}`,
         });
         toast.error(err);
       });
@@ -100,8 +106,19 @@ function ClipItem({ data }: ClipItemProps) {
           css={{
             fontSize: "10px",
             color: `${colorMode === "Dark" ? "$whiteMuted" : "$blackMuted"}`,
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            gap: "$1",
           }}
         >
+          {data.doc.device?.toLowerCase() === "laptop" ? (
+            <IoIosLaptop size={12} />
+          ) : data.doc.device?.toLowerCase() === "phone" ? (
+            <IoMdPhonePortrait size={12} />
+          ) : (
+            <></>
+          )}
           {relativeDate}
         </Paragraph>
       </Box>

@@ -2,6 +2,15 @@ import React from "react";
 import { Box } from "./styled";
 import { useColorModeValue, usePrimaryColor } from "../state";
 
+// CUSTOM SWITCH COMPONENT
+// EXPOSES THE ACTIVATE STATE
+// OF THE SWITCH AND THE HANDLER FOR CHANGING THIS
+// STATE.IT WAS WHILE CREATING THIS COMPONENT I
+// REALIZED HOW FAR I HAD COME IN REACT
+
+// TODO add a way to add with and height to the switch
+// so it can be used elsewhere
+
 export interface SwitchProps {
   onClick?: () => void;
 }

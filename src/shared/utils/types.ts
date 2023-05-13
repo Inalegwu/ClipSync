@@ -44,6 +44,7 @@ export interface ClipBoardItem {
   _rev: string;
   dateCreated: string;
   _id: string;
+  device?: string;
 }
 
 export interface ClipStore {
@@ -61,6 +62,7 @@ export interface ErrorDataArgs {
   description: string;
   error_code: ErrorCode;
   date: string;
+  item?: string;
 }
 
 export interface Row {
