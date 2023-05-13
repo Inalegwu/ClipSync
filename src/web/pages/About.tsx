@@ -142,12 +142,8 @@ function About() {
               }`,
             }}
           >
-            🎉For the most part , yes it is.However , the free tier is limited
-            to 2 devices, Your PC and your phone , which is fine for 99.9% of
-            users.You can also pay a one time fee to unlock access to infinite
-            devices this is for the Hyper User that wants everything everywhere.
-            and we know just how few of those there are. Donations are also
-            available.
+            🎉Yes it is and I plan on making sure it stays that way. You can
+            always donate if you enjoy the software that much.
           </Paragraph>
         </Box>
         <Box
