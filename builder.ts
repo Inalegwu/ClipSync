@@ -2,7 +2,7 @@ import { build } from "electron-builder";
 
 build({
   config: {
-    appId: "com.clipsync.app",
+    appId: "com.ClipSync.app",
     productName: "ClipSync",
     artifactName: "${productName}-${version}-${platform}-${arch}.${ext}",
     directories: {
@@ -13,6 +13,6 @@ build({
     },
     mac: {
       icon: "./src/assets/images/AppIcon.icns",
-    },
+    },  
   },
 });
