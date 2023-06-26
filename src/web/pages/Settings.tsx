@@ -17,7 +17,6 @@ import {
 } from "../state";
 import {
   FiCopy,
-  FiEdit,
   FiEdit2,
   FiHome,
   FiInfo,
@@ -46,8 +45,6 @@ function Settings() {
   const [changes, setChanges] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<boolean>(false);
 
-  // ANIMATE THE SWITCHES BASED ON THE STATE SET FROM SETTINGS
-  // DID IT THIS WAY FOR THE COOL ANIMATION
   React.useEffect(() => {
     if (colorMode === "Dark") {
       themeSwitchRef.current?.setActive(true);
@@ -69,10 +66,6 @@ function Settings() {
     });
   }, []);
 
-  // enter dark mode
-  //!IMPORTANT might have to consider having other color
-  //! themes although this app isn't for just devs
-  //! so multiple color themes isn't necessary
   function activateDarkMode() {
     setChanges(true);
     const isActive = themeSwitchRef.current?.active();
@@ -86,7 +79,6 @@ function Settings() {
     }
   }
 
-  // activate or deactive syncing
   function activateSyncing() {
     setChanges(true);
     const isActive = syncSwitchRef.current?.active();
@@ -108,10 +100,6 @@ function Settings() {
     }
   }
 
-  // write the application id to the
-  // the clipboard.this risky though
-  // cause now it's more or less publicly
-  // visible
   function copyAppId() {
     invoke
       .appendTextToClipBoard(appId!)
@@ -129,7 +117,6 @@ function Settings() {
       });
   }
 
-  //GENERATE A NEW APPLICATION ID
   function refreshAppId() {
     setChanges(true);
     toast.success(
@@ -140,7 +127,6 @@ function Settings() {
     setAppId(newAppId);
   }
 
-  //SAVE THE CUSTOMIZATION TO ("appData")/ClipSync/settings.json
   function saveSettings() {
     const settingsData: SettingsData = {
       colorMode,
@@ -169,21 +155,11 @@ function Settings() {
       });
   }
 
-  // there has to be a better way to clear the
-  // clipboard but this works , because once the
-  // main page is reloaded the db is recreated
-  // TODO figure out how to delete items in the
-  // sync as well because right now deletion meanse every thing
-  // is still in the synced db and once the app is reloaded
-  // all the data is there again
+  //ensure that clearing syncs as well
   function emptyClipBoard() {
     db.destroy();
   }
 
-  // advanced mode allows the user to change
-  // the sync destination to their custom
-  // couch db instance=>this is mostly for power
-  // users
   function activateAdvancedMode() {
     setChanges(true);
 

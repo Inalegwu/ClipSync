@@ -7,8 +7,6 @@ import { NativeImage } from "electron";
 import { ColorMode } from "../../web/state";
 import { persist } from "zustand/middleware";
 
-// ERROR CODE FOR USE WHEN READING ERROR LOGS IN THE
-// MY ERROR LOG INTERFACE
 export enum ErrorCode {
   DATABASE_READ_ERROR = "DB_100",
   DATABASE_WRITE_ERROR = "DB_102",

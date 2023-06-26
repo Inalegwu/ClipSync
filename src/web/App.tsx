@@ -14,16 +14,13 @@ import ClipItem from "./component/ClipItem";
 import "./index.css";
 import { useSyncState } from "./state/syncState";
 
-/**
- *
- * IMPORT THE POUCH DB DATABASE
- *
- */
+
 import db from "../shared/utils/db";
 import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
-import ClipImage from "./component/ClipImage";
 
-export const App = () => {
+
+
+export default function App(){
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
@@ -34,8 +31,7 @@ export const App = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const viewRef = React.useRef<HTMLDivElement>(null);
 
-  // read text from the clipboard and append it to the
-  // local pouchdb database
+  
   function readFromClipboard() {
     invoke
       .readClipBoardText()
@@ -60,27 +56,7 @@ export const App = () => {
       });
   }
 
-  // read images from the clipboard and append append it to the
-  // local pouchdb database
-  function readClipBoardImage() {
-    invoke
-      .readClipBoardImage()
-      .then((value) => {
-        invoke.debugPrint({
-          data: value.isEmpty(),
-          description: "Clipboard image",
-        });
-      })
-      .catch((err) => {
-        invoke.debugPrint({
-          data: err,
-          description: "Failed to read Clipboard Image",
-        });
-      });
-  }
-
-  // read clipboard items from the local pouchdb database
-  function readDb() {
+    function readDb() {
     db.allDocs({
       include_docs: true,
       startkey: appId,
@@ -88,13 +64,7 @@ export const App = () => {
       attachments: true,
     })
       .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
-        // set the clipboard data to the entire row data
-        // received from the db , instead of appending
-        // appending will continually add items to the list
-        // and this will cause an infinite render loop, which is very
-        // hurtful to the app performance.In fact the app will be stuck
-        // so there will be no performance
-        setClipBoardData(res.rows);
+          setClipBoardData(res.rows);
       })
       .catch((err) => {
         invoke.sendErrorData({
@@ -128,28 +98,18 @@ export const App = () => {
   }, [colorMode, canSync, primaryColor, appId, syncUrl, setAdvanceMode]);
 
   React.useEffect(() => {
-    // read the clipboard every 2 seconds
     const interval = setInterval(() => {
       readFromClipboard();
-      // readClipBoardImage();
     }, 2000);
 
-    // clears the clipboard every 5 seconds
     const clearClipBoardInterval = setInterval(() => {
       invoke.clearClipBoard();
     }, 5000);
 
-    // read the database every 100 seconds
-    // by this time , at some point , the clipboard will be empty
-    // and there is code to ensure nothing is appended when the clipboard is empty
-    // in readClipBoard()
     const readDbInterval = setInterval(() => {
       readDb();
     }, 100);
 
-    // if the app is allowed to sync ,
-    // begin the live syncing of the local
-    // instance to the remote instance and vice versa
     if (canSync === true) {
       db.sync(syncUrl, {
         live: true,
@@ -185,8 +145,7 @@ export const App = () => {
         });
     }
 
-    // dispose of all intervals when done
-    // if not , bad things happen
+    
     return () => {
       clearInterval(interval);
       clearInterval(clearClipBoardInterval);
@@ -194,16 +153,10 @@ export const App = () => {
     };
   }, []);
 
-  // run read user preferences only once
-  // why did i use memo ? no reason exactly
-  // i really just wanted my effect code separate
   React.useMemo(() => {
     readUserPreferences();
   }, []);
 
-  // allows the user type in data to append to the clipboard
-  // I don't know if this is something people will use ,
-  // but I use it
   function addToClipBoard(text: string) {
     invoke.appendTextToClipBoard(text);
   }
@@ -216,8 +169,7 @@ export const App = () => {
     viewRef.current?.scrollTo({ top: -clipBoardData.length });
   }
 
-  // listens for the PageUp and PageDown keys to
-  // scroll the page
+  
   window.addEventListener("keydown", (ev) => {
     if (ev.key === "PageUp") {
       scrollToTop();
@@ -323,12 +275,10 @@ export const App = () => {
       >
         {clipBoardData &&
           clipBoardData.map((data, idx) => {
-            // i should probably find a way to fix this ts ignore
-            // @ts-ignore
+            // @ts-ignore - doc doesn't exist on data
             return <ClipItem data={data} key={idx} />;
             // return <Box key={idx}>{data.id}</Box>;
           })}
-        {/* <ClipImage /> */}
       </Box>
       <Input
         ref={inputRef}

@@ -2,13 +2,6 @@ import { app, clipboard } from "electron";
 import { createIpcSlice } from "interprocess";
 import { ClipBoardData } from "../../utils/types";
 
-/**
- *
- * CORE
- *
- * THIS IS WHERE ALL THE CLIPBOARD SHIT HAPPENS
- *
- */
 export const ProcessIpcs = createIpcSlice({
   main: {
     async readClipBoardText() {

@@ -5,14 +5,6 @@ import { app } from "electron";
 import * as fs from "fs";
 import superjson from "superjson";
 
-/**
- *
- *
- * ALL IPCS RELATED TO CONFIGURING THE APPLICATIONS
- * -SETTINGS
- *  -APPLICATION ID
- *  -COLOR MODE
- */
 export const ConfigIpcs = createIpcSlice({
   main: {
     async saveSettings(_, settings: SettingsData) {

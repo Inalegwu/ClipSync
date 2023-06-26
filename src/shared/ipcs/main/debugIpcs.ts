@@ -9,19 +9,6 @@ import path from "path";
 import { app } from "electron";
 import superjson from "superjson";
 
-/**
- *
- * IPC'S RELATED TO DEBUGGING AND ERROR DATA
- * MIGHT REMOVE.
- *
- * LATER : only remove debug print function
- * send error data will be used for error reporting in testing
- * stage
- * final release will opt into sending anonymous error
- * data
- *
- *
- * */
 export const DebugIpcs = createIpcSlice({
   main: {
     async debugPrint(_, { data, description }: DebugPrintArgs) {
