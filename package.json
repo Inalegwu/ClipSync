@@ -1,4 +1,5 @@
 {
+  "type":"module",
   "name": "clipsync",
   "description": "sync your clipboards across devices",
   "version": "0.1.0",
