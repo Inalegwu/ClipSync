@@ -1,11 +1,10 @@
 {
-  "type":"module",
-  "name": "ClipSync",
+  "name": "clipsync",
   "description": "sync your clipboards across devices",
   "version": "0.1.0",
   "license": "MIT",
   "author": {
-    "name": "Ikwue Inalegwu"
+    "name": "studio-pc"
   },
   "repository": {
     "url": "https://github.com/studio-pc/serpent.git"
@@ -16,6 +15,9 @@
     "build": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --progress",
     "dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
     "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "electronmon": {
     "patterns": [
