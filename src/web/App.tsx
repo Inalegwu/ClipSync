@@ -1,26 +1,26 @@
 import React from "react";
-import useWindowApi from "./hooks/useWindowApi";
+import { useWindowApi } from "@/web/hooks";
 import {
   useAdvanceMode,
   useClipBoard,
   useColorModeValue,
   usePrimaryColor,
   useUserState,
-} from "./state";
-import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
+  useSyncState,
+} from "@/web/state";
+import {
+  Box,
+  Button,
+  Input,
+  LinkButton,
+  Paragraph,
+} from "@/web/component/styled";
 import { FiSettings, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
-import ClipItem from "./component/ClipItem";
-import "./index.css";
-import { useSyncState } from "./state/syncState";
+import { db } from "@shared/utils";
+import { ClipBoardItem, ErrorCode } from "@shared/utils/types";
 
-
-import db from "../shared/utils/db";
-import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
-
-
-
-export default function App(){
+export default function App() {
   const { invoke } = useWindowApi();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
@@ -31,7 +31,6 @@ export default function App(){
   const inputRef = React.useRef<HTMLInputElement>(null);
   const viewRef = React.useRef<HTMLDivElement>(null);
 
-  
   function readFromClipboard() {
     invoke
       .readClipBoardText()
@@ -56,7 +55,7 @@ export default function App(){
       });
   }
 
-    function readDb() {
+  function readDb() {
     db.allDocs({
       include_docs: true,
       startkey: appId,
@@ -64,7 +63,7 @@ export default function App(){
       attachments: true,
     })
       .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
-          setClipBoardData(res.rows);
+        setClipBoardData(res.rows);
       })
       .catch((err) => {
         invoke.sendErrorData({
@@ -145,7 +144,6 @@ export default function App(){
         });
     }
 
-    
     return () => {
       clearInterval(interval);
       clearInterval(clearClipBoardInterval);
@@ -169,7 +167,6 @@ export default function App(){
     viewRef.current?.scrollTo({ top: -clipBoardData.length });
   }
 
-  
   window.addEventListener("keydown", (ev) => {
     if (ev.key === "PageUp") {
       scrollToTop();
@@ -316,4 +313,4 @@ export default function App(){
       />
     </Box>
   );
-};
+}

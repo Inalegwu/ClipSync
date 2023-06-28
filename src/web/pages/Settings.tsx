@@ -6,7 +6,7 @@ import {
   LinkButton,
   Paragraph,
   Title,
-} from "../component/styled";
+} from "@/web/component/styled";
 import {
   useAdvanceMode,
   useClipBoard,
@@ -14,7 +14,7 @@ import {
   usePrimaryColor,
   useSyncState,
   useUserState,
-} from "../state";
+} from "@/web/state";
 import {
   FiCopy,
   FiEdit2,
@@ -23,13 +23,11 @@ import {
   FiRefreshCw,
   FiTrash,
 } from "react-icons/fi";
-import Switch, { SwitchRef } from "../component/Switch";
-import { SettingsItem } from "../component/SettingsItem";
-import useWindowApi from "../hooks/useWindowApi";
-import { ErrorCode, SettingsData } from "../../shared/utils/types";
+import { SettingsItem, Switch, SwitchRef } from "@web/component";
+import { useWindowApi } from "@web/hooks";
+import { ErrorCode, SettingsData } from "@shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
-import generateAppId from "../../shared/utils/generateAppId";
-import db from "../../shared/utils/db";
+import { generateAppId, db } from "@shared/utils";
 
 function Settings() {
   const { invoke } = useWindowApi();

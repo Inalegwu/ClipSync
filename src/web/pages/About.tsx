@@ -1,6 +1,12 @@
 import React from "react";
-import { Box, Button, LinkButton, Paragraph, Title } from "../component/styled";
-import { useColorModeValue, usePrimaryColor } from "../state";
+import {
+  Box,
+  Button,
+  LinkButton,
+  Paragraph,
+  Title,
+} from "@web/component/styled";
+import { useColorModeValue, usePrimaryColor } from "@web/state";
 import {
   FiArrowLeft,
   FiGithub,
@@ -8,7 +14,7 @@ import {
   FiHome,
   FiTwitter,
 } from "react-icons/fi";
-import useWindowApi from "../hooks/useWindowApi";
+import { useWindowApi } from "@web/hooks";
 
 /**
  *

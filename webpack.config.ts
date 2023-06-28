@@ -13,6 +13,12 @@ const common: Configuration = {
     assetModuleFilename: "assets/[name][ext]",
   },
   resolve: {
+    roots:["./"],
+    alias:{
+      "@/*":"./src/*",
+      "@web/*":"./src/web/*",
+      "@shared/*":"./src/shared/*"
+    },
     extensions: [".js", ".ts", ".jsx", ".tsx", ".json"],
   },
   module: {

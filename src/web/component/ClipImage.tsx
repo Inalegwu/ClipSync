@@ -11,6 +11,9 @@ export interface ClipImageProps {
 export default function ClipImage({ data }: ClipImageProps) {
   const { colorMode } = useColorModeValue();
   const { primaryColor } = usePrimaryColor();
+
+  console.log(data);
+
   return (
     <Box
       css={{

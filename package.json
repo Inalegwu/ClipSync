@@ -1,6 +1,7 @@
 {
   "name": "clipsync",
   "description": "sync your clipboards across devices",
+  "type": "module",
   "version": "0.1.0",
   "license": "MIT",
   "author": {
@@ -9,20 +10,37 @@
   "repository": {
     "url": "https://github.com/studio-pc/serpent.git"
   },
-  "main": "src/main.ts",
+  "main": "dist/main.js",
   "scripts": {
     "dev": "rimraf dist && run-p dev:webpack dev:electron",
     "build": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --progress",
     "dev:webpack": "cross-env NODE_ENV=\"development\" webpack --progress",
     "dev:electron": "wait-on dist/main.js dist/index.html && electronmon .",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "package": "run-p build && npm exec electron-builder"
   },
   "electronmon": {
     "patterns": [
       "dist/**/*"
     ]
+  },
+  "build": {
+    "appId": "com.clipsynccloud.clipsyncdesk",
+    "productName": "ClipSync",
+    "artifactName": "${productName}-${version}-${platform}-${arch}.${ext}",
+    "directories": {
+      "output": "./release"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "./src/assets/images/AppIconicon-4.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "removeDefaultUninstallWelcomePage": true
+    }
   },
   "dependencies": {
     "@stitches/react": "^1.2.8",

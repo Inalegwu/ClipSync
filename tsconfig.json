@@ -13,9 +13,9 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/"],
-      "@/web/*": ["./src/web/"],
-      "@shared/*": ["./src/shared/"]
+      "@/*": ["./src/*"],
+      "@web/*": ["./src/web/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src", "tailwind.config.js"],

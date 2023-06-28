@@ -1,8 +1,3 @@
-/**
- *
- * TYPE DEFINITIONS USED APP WIDE
- *
- */
 import { NativeImage } from "electron";
 import { ColorMode } from "../../web/state";
 import { persist } from "zustand/middleware";
