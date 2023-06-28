@@ -6,7 +6,7 @@ import {
   LinkButton,
   Paragraph,
   Title,
-} from "@/web/component/styled";
+} from "../component/styled";
 import {
   useAdvanceMode,
   useClipBoard,
@@ -14,7 +14,7 @@ import {
   usePrimaryColor,
   useSyncState,
   useUserState,
-} from "@/web/state";
+} from "../state";
 import {
   FiCopy,
   FiEdit2,
@@ -23,11 +23,11 @@ import {
   FiRefreshCw,
   FiTrash,
 } from "react-icons/fi";
-import { SettingsItem, Switch, SwitchRef } from "@web/component";
-import { useWindowApi } from "@web/hooks";
-import { ErrorCode, SettingsData } from "@shared/utils/types";
+import { SettingsItem, Switch, SwitchRef } from "../component";
+import { useWindowApi } from "../hooks";
+import { ErrorCode, SettingsData } from "../../shared/utils/types";
 import { Toaster, toast } from "react-hot-toast";
-import { generateAppId, db } from "@shared/utils";
+import { generateAppId, db } from "../../shared/utils";
 
 function Settings() {
   const { invoke } = useWindowApi();
@@ -59,7 +59,7 @@ function Settings() {
     } else {
       advanceModeSwitchRef.current?.setActive(false);
     }
-    invoke.readSettings().then((res) => {
+    invoke.readSettings().then((res: any) => {
       setAppId(res.appId!);
     });
   }, []);
@@ -104,7 +104,7 @@ function Settings() {
       .then(() => {
         toast.success("Copied");
       })
-      .catch((err) => {
+      .catch((err: any) => {
         toast.error("Something Wen't Wrong");
         invoke.sendErrorData({
           error: err,
@@ -142,7 +142,7 @@ function Settings() {
       .then(() => {
         setChanges(false);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         invoke.sendErrorData({
           error: err,
           description: "Failed To Save Settings",

@@ -1,5 +1,5 @@
 import React from "react";
-import { useWindowApi } from "@/web/hooks";
+import { useWindowApi } from "./hooks";
 import {
   useAdvanceMode,
   useClipBoard,
@@ -7,18 +7,12 @@ import {
   usePrimaryColor,
   useUserState,
   useSyncState,
-} from "@/web/state";
-import {
-  Box,
-  Button,
-  Input,
-  LinkButton,
-  Paragraph,
-} from "@/web/component/styled";
+} from "./state";
+import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
 import { FiSettings, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
-import { db } from "@shared/utils";
-import { ClipBoardItem, ErrorCode } from "@shared/utils/types";
+import { db } from "../shared/utils";
+import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
 
 export default function App() {
   const { invoke } = useWindowApi();
@@ -45,7 +39,7 @@ export default function App() {
           });
         }
       })
-      .catch((reason) => {
+      .catch((reason: any) => {
         invoke.sendErrorData({
           error: reason,
           description: "Failed write clipboard content to database",
@@ -65,7 +59,7 @@ export default function App() {
       .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
         setClipBoardData(res.rows);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         invoke.sendErrorData({
           error: err,
           description: "Failed to read clipboards from database",
@@ -86,7 +80,7 @@ export default function App() {
         setSyncUrl(settings.syncUrl);
         setAdvanceMode(settings.isAdvanceMode);
       })
-      .catch((reason) => {
+      .catch((reason: any) => {
         invoke.sendErrorData({
           error: reason,
           description: "Failed to read Settings",
@@ -130,11 +124,11 @@ export default function App() {
           });
           toast.success("All Items Synced Successfully");
         })
-        .on("error", (err) => {
+        .on("error", (err: any) => {
           invoke.debugPrint({ data: err, description: "syncing paused" });
           toast.error("An Error Occured While Syncing...");
         })
-        .catch((err) => {
+        .catch((err: any) => {
           invoke.sendErrorData({
             error: err,
             description: "Syncing Failed",

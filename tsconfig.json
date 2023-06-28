@@ -11,7 +11,7 @@
     "noUnusedParameters": true,
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
-    "baseUrl": "./",
+    "baseUrl": "./src/",
     "paths": {
       "@/*": ["./src/*"],
       "@web/*": ["./src/web/*"],
