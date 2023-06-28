@@ -1,7 +1,6 @@
 {
   "name": "clipsync",
   "description": "sync your clipboards across devices",
-  "type": "module",
   "version": "0.1.0",
   "license": "MIT",
   "author": {
