@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useCallback,useRef,useState} from "react";
 import {
   Box,
   Button,
@@ -37,13 +37,13 @@ function Settings() {
   const { isAdvanceMode, setAdvanceMode } = useAdvanceMode();
   const { clipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
-  const themeSwitchRef = React.useRef<SwitchRef>(null);
-  const syncSwitchRef = React.useRef<SwitchRef>(null);
-  const advanceModeSwitchRef = React.useRef<SwitchRef>(null);
-  const [changes, setChanges] = React.useState<boolean>(false);
-  const [editing, setEditing] = React.useState<boolean>(false);
+  const themeSwitchRef =useRef<SwitchRef>(null);
+  const syncSwitchRef = useRef<SwitchRef>(null);
+  const advanceModeSwitchRef =useRef<SwitchRef>(null);
+  const [changes, setChanges] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (colorMode === "Dark") {
       themeSwitchRef.current?.setActive(true);
     } else {
@@ -64,7 +64,7 @@ function Settings() {
     });
   }, []);
 
-  const activateDarkMode = React.useCallback(() => {
+  const activateDarkMode = useCallback(() => {
     setChanges(true);
     const isActive = themeSwitchRef.current?.active();
 
@@ -77,7 +77,7 @@ function Settings() {
     }
   }, []);
 
-  const activateSyncing = React.useCallback(() => {
+  const activateSyncing = useCallback(() => {
     setChanges(true);
     const isActive = syncSwitchRef.current?.active();
 
@@ -98,7 +98,7 @@ function Settings() {
     }
   }, []);
 
-  function copyAppId() {
+  const copyAppId=useCallback(()=>{
     invoke
       .appendTextToClipBoard(appId!)
       .then(() => {
@@ -113,9 +113,9 @@ function Settings() {
           date: new Date().toISOString(),
         });
       });
-  }
+  },[])
 
-  const refreshAppId = React.useCallback(() => {
+  const refreshAppId = useCallback(() => {
     setChanges(true);
     toast.success(
       "Changing your App ID means you'll lose access to all your clips and the mobile app will be out of sync",
@@ -125,7 +125,7 @@ function Settings() {
     setAppId(newAppId);
   }, []);
 
-  const saveSettings = React.useCallback(() => {
+  const saveSettings = useCallback(() => {
     const settingsData: SettingsData = {
       colorMode,
       canSync: syncSwitchRef.current?.active()!,
@@ -154,7 +154,7 @@ function Settings() {
   }, []);
 
   //ensure that clearing syncs as well
-  const emptyClipBoard = React.useCallback(() => {
+  const emptyClipBoard = useCallback(() => {
     db.destroy();
   }, []);
 
@@ -180,7 +180,7 @@ function Settings() {
     }
   }, []);
 
-  const copySyncUrl = React.useCallback(() => {
+  const copySyncUrl = useCallback(() => {
     invoke.appendTextToClipBoard(syncUrl);
     toast.success("Copied Successfully...", { duration: 300 });
   }, []);

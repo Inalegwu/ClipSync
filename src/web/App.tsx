@@ -1,4 +1,4 @@
-import React from "react";
+import {useEffect,useCallback,useRef,useMemo} from "react";
 import { useWindowApi } from "./hooks";
 import {
   useAdvanceMode,
@@ -8,7 +8,7 @@ import {
   useUserState,
   useSyncState,
 } from "./state";
-import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
+import { Box, Button, Input, LinkButton} from "./component/styled";
 import { ClipItem } from "./component";
 import { FiSettings, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
@@ -23,10 +23,10 @@ export default function App() {
   const { setAdvanceMode } = useAdvanceMode();
   const { clipBoardData, setClipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const viewRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const viewRef = useRef<HTMLDivElement>(null);
 
-  const readFromClipboard = React.useCallback(() => {
+  const readFromClipboard = useCallback(() => {
     invoke
       .readClipBoardText()
       .then((res) => {
@@ -50,7 +50,7 @@ export default function App() {
       });
   }, []);
 
-  const readDb = React.useCallback(() => {
+  const readDb = useCallback(() => {
     db.allDocs({
       include_docs: true,
       startkey: appId,
@@ -71,7 +71,7 @@ export default function App() {
       });
   }, [db]);
 
-  const readUserPreferences = React.useCallback(() => {
+  const readUserPreferences = useCallback(() => {
     invoke
       .readSettings()
       .then((settings) => {
@@ -92,7 +92,7 @@ export default function App() {
       });
   }, [colorMode, canSync, primaryColor, appId, syncUrl, setAdvanceMode]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       readFromClipboard();
     }, 2000);
@@ -147,19 +147,19 @@ export default function App() {
     };
   }, []);
 
-  React.useMemo(() => {
+  useMemo(() => {
     readUserPreferences();
   }, []);
 
-  const addToClipBoard = React.useCallback((text: string) => {
+  const addToClipBoard = useCallback((text: string) => {
     invoke.appendTextToClipBoard(text);
   }, []);
 
-  const scrollToBottom = React.useCallback(() => {
+  const scrollToBottom = useCallback(() => {
     viewRef.current?.scrollTo({ top: clipBoardData.length * 500 });
   }, [viewRef]);
 
-  const scrollToTop = React.useCallback(() => {
+  const scrollToTop = useCallback(() => {
     viewRef.current?.scrollTo({ top: -clipBoardData.length });
   }, [viewRef]);
 

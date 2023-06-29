@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Button, LinkButton, Paragraph, Title } from "../component/styled";
 import { useColorModeValue, usePrimaryColor } from "../state";
 import {
