@@ -27,6 +27,8 @@ export const ConfigIpcs = createIpcSlice({
       const settingsData: SettingsData = superjson.parse(
         fs.readFileSync(settingsPath, { encoding: "utf-8" })
       );
+      
+      console.log(settingsData)
 
       return settingsData;
     },

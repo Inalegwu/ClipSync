@@ -1,6 +1,5 @@
-import { app, clipboard } from "electron";
+import { clipboard } from "electron";
 import { createIpcSlice } from "interprocess";
-import { ClipBoardData } from "../../utils/types";
 
 export const ProcessIpcs = createIpcSlice({
   main: {

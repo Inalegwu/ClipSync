@@ -158,7 +158,7 @@ function Settings() {
     db.destroy();
   }, []);
 
-  const activateAdvancedMode = React.useCallback(() => {
+  const activateAdvancedMode =useCallback(() => {
     setChanges(true);
 
     const advancedModeActive = advanceModeSwitchRef.current?.active();

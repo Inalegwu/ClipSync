@@ -1,6 +1,4 @@
-import { NativeImage } from "electron";
 import { ColorMode } from "../../web/state";
-import { persist } from "zustand/middleware";
 
 export enum ErrorCode {
   DATABASE_READ_ERROR = "DB_100",

@@ -29,22 +29,12 @@ export const DebugIpcs = createIpcSlice({
         date,
         platform: process.platform,
       });
-      fs.writeFileSync(logsPath, logString, { encoding: "binary" });
-
-      /**
-       *
-       * TODO implement sending error logs to a remote url for parsing and
-       * TODO debugging...y'know like how the pros do it
-       *
-       * set up a bug tracking API and connect said api to a frontend
-       * where these issues can be tracked...
-       *
-       *
-       */
       if (process.env.NODE_ENV === "development") {
         console.log(
           `ERROR:${error}::DESCRIPTION:${description}::ERROR CODE :${error_code}`
         );
+      }else{
+        fs.writeFileSync(logsPath, logString, { encoding: "binary" });
       }
     },
     async logSyncFinished(
@@ -79,7 +69,11 @@ export const DebugIpcs = createIpcSlice({
         push_doc_write_failures,
       });
 
-      fs.writeFileSync(logsPath, logsString, { encoding: "binary" });
+      if(process.env.NODE_ENV==="development"){
+        console.log(logsString)  
+      }else{
+        fs.writeFileSync(logsPath, logsString, { encoding: "binary" });      
+      }
     },
   },
 });
