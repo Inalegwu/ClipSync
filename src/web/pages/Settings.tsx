@@ -64,7 +64,7 @@ function Settings() {
     });
   }, []);
 
-  function activateDarkMode() {
+  const activateDarkMode = React.useCallback(() => {
     setChanges(true);
     const isActive = themeSwitchRef.current?.active();
 
@@ -75,9 +75,9 @@ function Settings() {
       themeSwitchRef.current?.setActive(false);
       setColorMode("Light");
     }
-  }
+  }, []);
 
-  function activateSyncing() {
+  const activateSyncing = React.useCallback(() => {
     setChanges(true);
     const isActive = syncSwitchRef.current?.active();
 
@@ -96,16 +96,16 @@ function Settings() {
       syncSwitchRef.current?.setActive(false);
       changeSyncState(syncSwitchRef?.current?.active()!);
     }
-  }
+  }, []);
 
   function copyAppId() {
     invoke
       .appendTextToClipBoard(appId!)
       .then(() => {
-        toast.success("Copied");
+        toast.success("Copied", { duration: 300 });
       })
       .catch((err: any) => {
-        toast.error("Something Wen't Wrong");
+        toast.error("Something Wen't Wrong", { duration: 300 });
         invoke.sendErrorData({
           error: err,
           description: "Failed to append to clipboard",
@@ -115,7 +115,7 @@ function Settings() {
       });
   }
 
-  function refreshAppId() {
+  const refreshAppId = React.useCallback(() => {
     setChanges(true);
     toast.success(
       "Changing your App ID means you'll lose access to all your clips and the mobile app will be out of sync",
@@ -123,9 +123,9 @@ function Settings() {
     );
     const newAppId = generateAppId();
     setAppId(newAppId);
-  }
+  }, []);
 
-  function saveSettings() {
+  const saveSettings = React.useCallback(() => {
     const settingsData: SettingsData = {
       colorMode,
       canSync: syncSwitchRef.current?.active()!,
@@ -137,7 +137,7 @@ function Settings() {
     invoke
       .saveSettings(settingsData)
       .then(() => {
-        toast.success("Saved Successfully");
+        toast.success("Saved Successfully", { duration: 300 });
       })
       .then(() => {
         setChanges(false);
@@ -149,37 +149,41 @@ function Settings() {
           error_code: ErrorCode.FILE_WRITE_ERROR,
           date: new Date().toISOString(),
         });
-        toast.error("An Error Occurred");
+        toast.error("An Error Occurred", { duration: 300 });
       });
-  }
+  }, []);
 
   //ensure that clearing syncs as well
-  function emptyClipBoard() {
+  const emptyClipBoard = React.useCallback(() => {
     db.destroy();
-  }
+  }, []);
 
-  function activateAdvancedMode() {
+  const activateAdvancedMode = React.useCallback(() => {
     setChanges(true);
 
     const advancedModeActive = advanceModeSwitchRef.current?.active();
 
     if (advancedModeActive === false) {
-      toast.success("Welcome To Advance Mode", { style: { fontSize: "12px" } });
+      toast.success("Welcome To Advance Mode", {
+        style: { fontSize: "12px" },
+        duration: 300,
+      });
       advanceModeSwitchRef.current?.setActive(true);
       setAdvanceMode(true);
     } else {
       toast.success("Well ,Seems like your done with advance mode", {
         style: { fontSize: "12px" },
+        duration: 300,
       });
       advanceModeSwitchRef.current?.setActive(false);
       setAdvanceMode(false);
     }
-  }
+  }, []);
 
-  function copySyncUrl() {
+  const copySyncUrl = React.useCallback(() => {
     invoke.appendTextToClipBoard(syncUrl);
-    toast.success("Copied Successfully...");
-  }
+    toast.success("Copied Successfully...", { duration: 300 });
+  }, []);
 
   return (
     <Box

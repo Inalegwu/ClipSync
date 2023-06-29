@@ -37,6 +37,7 @@ function ClipItem({ data }: ClipItemProps) {
       style: {
         width: "200px",
       },
+      duration: 300,
     });
   }
 
@@ -50,6 +51,7 @@ function ClipItem({ data }: ClipItemProps) {
           style: {
             width: "200px",
           },
+          duration: 300,
         });
       })
       .catch((err) => {
@@ -60,7 +62,7 @@ function ClipItem({ data }: ClipItemProps) {
           error_code: ErrorCode.CLIPBOARD_DELETE_ERROR,
           item: `ID:${data.doc._id} :: ${data.doc._rev}`,
         });
-        toast.error(err);
+        toast.error("Something Went Wrong", { duration: 300 });
       });
   }
 

@@ -4,12 +4,12 @@ import { ipcMain } from "./shared/ipcs/ipcs";
 
 const { handle, invoke } = ipcMain;
 
-app.whenReady().then(() => {
-  // i should probably be using this to determine the position of the window on the screen right?
-  // well that doesn't seem to be how electron wants it to work
-  const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
-    screen.getPrimaryDisplay().workAreaSize;
+app.setLoginItemSettings({
+  openAtLogin: true,
+  openAsHidden: true,
+});
 
+app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
     frame: false,
     autoHideMenuBar: true,
@@ -44,6 +44,8 @@ app.whenReady().then(() => {
   });
 
   // mainWindow.webContents.openDevTools({ mode: "detach" });
+
+  // console.log("ACTIVE");
 
   // wait until the final content of the page is loaded before showing the
   // window, to prevent having a white screen while the app is still spinning up...

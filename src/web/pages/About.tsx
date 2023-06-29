@@ -10,12 +10,6 @@ import {
 } from "react-icons/fi";
 import { useWindowApi } from "../hooks";
 
-/**
- *
- * STATIC ABOUT PAGE
- * WON'T CHANGE MUCH IN COMING DAYS
- *
- */
 function About() {
   const { invoke } = useWindowApi();
   const { colorMode } = useColorModeValue();

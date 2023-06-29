@@ -72,9 +72,6 @@ export interface Row {
   };
 }
 
-export const Middlware = ({ f, name }: { f: () => any; name: string }) =>
-  persist(f, { name });
-
 export interface SyncLogArgs {
   pull: boolean;
   push: boolean;

@@ -9,6 +9,7 @@ import {
   useSyncState,
 } from "./state";
 import { Box, Button, Input, LinkButton, Paragraph } from "./component/styled";
+import { ClipItem } from "./component";
 import { FiSettings, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
 import { db } from "../shared/utils";
@@ -25,7 +26,7 @@ export default function App() {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const viewRef = React.useRef<HTMLDivElement>(null);
 
-  function readFromClipboard() {
+  const readFromClipboard = React.useCallback(() => {
     invoke
       .readClipBoardText()
       .then((res) => {
@@ -47,9 +48,9 @@ export default function App() {
           date: new Date().toISOString(),
         });
       });
-  }
+  }, []);
 
-  function readDb() {
+  const readDb = React.useCallback(() => {
     db.allDocs({
       include_docs: true,
       startkey: appId,
@@ -58,6 +59,7 @@ export default function App() {
     })
       .then((res: PouchDB.Core.AllDocsResponse<{ doc?: ClipBoardItem }>) => {
         setClipBoardData(res.rows);
+        invoke.clearClipBoard();
       })
       .catch((err: any) => {
         invoke.sendErrorData({
@@ -67,7 +69,7 @@ export default function App() {
           date: new Date().toISOString(),
         });
       });
-  }
+  }, [db]);
 
   const readUserPreferences = React.useCallback(() => {
     invoke
@@ -122,11 +124,11 @@ export default function App() {
             pull_doc_write_failures: info.pull?.doc_write_failures!,
             push_doc_write_failures: info.push?.doc_write_failures!,
           });
-          toast.success("All Items Synced Successfully");
+          toast.success("All Items Synced Successfully", { duration: 300 });
         })
         .on("error", (err: any) => {
           invoke.debugPrint({ data: err, description: "syncing paused" });
-          toast.error("An Error Occured While Syncing...");
+          toast.error("An Error Occured While Syncing...", { duration: 300 });
         })
         .catch((err: any) => {
           invoke.sendErrorData({
@@ -149,17 +151,17 @@ export default function App() {
     readUserPreferences();
   }, []);
 
-  function addToClipBoard(text: string) {
+  const addToClipBoard = React.useCallback((text: string) => {
     invoke.appendTextToClipBoard(text);
-  }
+  }, []);
 
-  function scrollToBottom() {
+  const scrollToBottom = React.useCallback(() => {
     viewRef.current?.scrollTo({ top: clipBoardData.length * 500 });
-  }
+  }, [viewRef]);
 
-  function scrollToTop() {
+  const scrollToTop = React.useCallback(() => {
     viewRef.current?.scrollTo({ top: -clipBoardData.length });
-  }
+  }, [viewRef]);
 
   window.addEventListener("keydown", (ev) => {
     if (ev.key === "PageUp") {
@@ -170,11 +172,11 @@ export default function App() {
   });
 
   window.ononline = () => {
-    toast.success("Connection Established");
+    toast.success("Connection Established", { duration: 300 });
   };
 
   window.onoffline = () => {
-    toast.loading("Waiting for network to continue syncing");
+    toast.loading("Waiting for network to continue syncing", { duration: 300 });
   };
 
   return (
