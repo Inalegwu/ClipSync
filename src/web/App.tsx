@@ -1,4 +1,4 @@
-import {useEffect,useCallback,useRef,useMemo} from "react";
+import { useEffect, useCallback, useRef, useMemo } from "react";
 import { useWindowApi } from "./hooks";
 import {
   useAdvanceMode,
@@ -7,16 +7,18 @@ import {
   usePrimaryColor,
   useUserState,
   useSyncState,
+  useFirstLaunchState,
 } from "./state";
-import { Box, Button, Input, LinkButton} from "./component/styled";
+import { Box, Button, Input, LinkButton } from "./component/styled";
 import { ClipItem } from "./component";
 import { FiSettings, FiArrowDown, FiArrowUp } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
-import { db } from "../shared/utils";
+import { db, generateAppId } from "../shared/utils";
 import { ClipBoardItem, ErrorCode } from "../shared/utils/types";
 
 export default function App() {
   const { invoke } = useWindowApi();
+  const { isFirstLaunch, hasLaunchedFirstTime } = useFirstLaunchState();
   const { colorMode, setColorMode } = useColorModeValue();
   const { primaryColor, setPrimaryColor } = usePrimaryColor();
   const { canSync, syncUrl, setSyncUrl, changeSyncState } = useSyncState();
@@ -42,13 +44,13 @@ export default function App() {
       })
       .catch((reason: any) => {
         invoke.sendErrorData({
-          error: reason,
+          error: reason.toString(),
           description: "Failed write clipboard content to database",
           error_code: ErrorCode.DATABASE_WRITE_ERROR,
           date: new Date().toISOString(),
         });
       });
-  }, []);
+  }, [db, invoke]);
 
   const readDb = useCallback(() => {
     db.allDocs({
@@ -63,15 +65,15 @@ export default function App() {
       })
       .catch((err: any) => {
         invoke.sendErrorData({
-          error: err,
+          error: err.toString(),
           description: "Failed to read clipboards from database",
           error_code: ErrorCode.DATABASE_READ_ERROR,
           date: new Date().toISOString(),
         });
       });
-  }, [db]);
+  }, [db, setClipBoardData, invoke]);
 
-  const readUserPreferences = useCallback(() => {
+  const readUserPreferences = () => {
     invoke
       .readSettings()
       .then((settings) => {
@@ -84,13 +86,13 @@ export default function App() {
       })
       .catch((reason: any) => {
         invoke.sendErrorData({
-          error: reason,
+          error: reason.toString(),
           description: "Failed to read Settings",
           error_code: ErrorCode.FILE_READ_ERROR,
           date: new Date().toISOString(),
         });
       });
-  }, [colorMode, canSync, primaryColor, appId, syncUrl, setAdvanceMode]);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -104,6 +106,13 @@ export default function App() {
     const readDbInterval = setInterval(() => {
       readDb();
     }, 100);
+
+    if (isFirstLaunch || appId === undefined) {
+      toast.success("First Launch , Yayy...🎉");
+      const firstLaunchAppId = generateAppId();
+      setAppId(firstLaunchAppId);
+      hasLaunchedFirstTime();
+    }
 
     if (canSync === true) {
       db.sync(syncUrl, {
@@ -127,7 +136,16 @@ export default function App() {
           toast.success("All Items Synced Successfully", { duration: 300 });
         })
         .on("error", (err: any) => {
-          invoke.debugPrint({ data: err, description: "syncing paused" });
+          invoke.debugPrint({
+            data: err.toString(),
+            description: "syncing paused",
+          });
+          invoke.sendErrorData({
+            date: Date.now().toString(),
+            description: "Syncing incomplete",
+            error: err.toString(),
+            error_code: ErrorCode.DATABASE_SYNC_ERROR,
+          });
           toast.error("An Error Occured While Syncing...", { duration: 300 });
         })
         .catch((err: any) => {
@@ -151,9 +169,12 @@ export default function App() {
     readUserPreferences();
   }, []);
 
-  const addToClipBoard = useCallback((text: string) => {
-    invoke.appendTextToClipBoard(text);
-  }, []);
+  const addToClipBoard = useCallback(
+    (text: string) => {
+      invoke.appendTextToClipBoard(text);
+    },
+    [invoke]
+  );
 
   const scrollToBottom = useCallback(() => {
     viewRef.current?.scrollTo({ top: clipBoardData.length * 500 });

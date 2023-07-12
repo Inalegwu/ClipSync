@@ -1,4 +1,4 @@
-import React,{useEffect,useCallback,useRef,useState} from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   useAdvanceMode,
   useClipBoard,
   useColorModeValue,
+  useFirstLaunchState,
   usePrimaryColor,
   useSyncState,
   useUserState,
@@ -37,9 +38,10 @@ function Settings() {
   const { isAdvanceMode, setAdvanceMode } = useAdvanceMode();
   const { clipBoardData } = useClipBoard();
   const { appId, setAppId } = useUserState();
-  const themeSwitchRef =useRef<SwitchRef>(null);
+  const { isFirstLaunch } = useFirstLaunchState();
+  const themeSwitchRef = useRef<SwitchRef>(null);
   const syncSwitchRef = useRef<SwitchRef>(null);
-  const advanceModeSwitchRef =useRef<SwitchRef>(null);
+  const advanceModeSwitchRef = useRef<SwitchRef>(null);
   const [changes, setChanges] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -59,6 +61,11 @@ function Settings() {
     } else {
       advanceModeSwitchRef.current?.setActive(false);
     }
+
+    if (isFirstLaunch) {
+      toast.success("First Launch , Yayy...🎉");
+    }
+
     invoke.readSettings().then((res: any) => {
       setAppId(res.appId!);
     });
@@ -75,7 +82,7 @@ function Settings() {
       themeSwitchRef.current?.setActive(false);
       setColorMode("Light");
     }
-  }, []);
+  }, [themeSwitchRef, setColorMode]);
 
   const activateSyncing = useCallback(() => {
     setChanges(true);
@@ -96,9 +103,9 @@ function Settings() {
       syncSwitchRef.current?.setActive(false);
       changeSyncState(syncSwitchRef?.current?.active()!);
     }
-  }, []);
+  }, [syncSwitchRef, changeSyncState]);
 
-  const copyAppId=useCallback(()=>{
+  const copyAppId = useCallback(() => {
     invoke
       .appendTextToClipBoard(appId!)
       .then(() => {
@@ -113,7 +120,7 @@ function Settings() {
           date: new Date().toISOString(),
         });
       });
-  },[])
+  }, [appId]);
 
   const refreshAppId = useCallback(() => {
     setChanges(true);
@@ -123,7 +130,7 @@ function Settings() {
     );
     const newAppId = generateAppId();
     setAppId(newAppId);
-  }, []);
+  }, [setAppId]);
 
   const saveSettings = useCallback(() => {
     const settingsData: SettingsData = {
@@ -151,14 +158,14 @@ function Settings() {
         });
         toast.error("An Error Occurred", { duration: 300 });
       });
-  }, []);
+  }, [colorMode, syncSwitchRef, primaryColor, syncUrl, isAdvanceMode]);
 
   //ensure that clearing syncs as well
   const emptyClipBoard = useCallback(() => {
     db.destroy();
-  }, []);
+  }, [db]);
 
-  const activateAdvancedMode =useCallback(() => {
+  const activateAdvancedMode = useCallback(() => {
     setChanges(true);
 
     const advancedModeActive = advanceModeSwitchRef.current?.active();
@@ -178,12 +185,12 @@ function Settings() {
       advanceModeSwitchRef.current?.setActive(false);
       setAdvanceMode(false);
     }
-  }, []);
+  }, [advanceModeSwitchRef, setAdvanceMode]);
 
   const copySyncUrl = useCallback(() => {
     invoke.appendTextToClipBoard(syncUrl);
     toast.success("Copied Successfully...", { duration: 300 });
-  }, []);
+  }, [syncUrl, invoke]);
 
   return (
     <Box

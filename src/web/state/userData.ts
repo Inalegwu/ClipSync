@@ -9,7 +9,7 @@ export interface UserState {
 export const useUserState = create<UserState>()(
   persist(
     (set) => ({
-      appId: "",
+      appId: undefined,
       setAppId: (id: string) => set(() => ({ appId: id })),
     }),
     { name: "userData" }
